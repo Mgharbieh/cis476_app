@@ -158,7 +158,7 @@ Item {
                     text: "Login"
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    bottomPadding: 12
+                    bottomPadding: 8
                     font: parent.font
                     color: "#FFFFFF"
                     anchors.centerIn: parent
@@ -167,6 +167,8 @@ Item {
                background: Rectangle {
                    color: "transparent"
                    radius: 10
+                   border.color: "#144F85"
+                   border.width: 2
                }
 
                HoverHandler {
