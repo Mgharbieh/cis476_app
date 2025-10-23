@@ -1,11 +1,16 @@
+import cis476_app
+
 import QtQuick
 import QtQuick.Controls
 
 Item {
+    property string userName: ""
+    property string passWord: ""
+
     id: loginScreen
     visible: true
     anchors.fill: parent
-    z: 10
+    z: 100
 
     Rectangle {
         id: root
@@ -80,6 +85,7 @@ Item {
                onEditingFinished: {
                    //debugging
                    console.log("Input finished:", usernameInput.text)
+                   userName = usernameInput.text
                 }
            }
        }
@@ -123,6 +129,7 @@ Item {
                onEditingFinished: {
                    //debugging
                    console.log("Input finished:", passwordInput.text)
+                   passWord = passwordInput.text
                 }
            }
        }
@@ -185,9 +192,9 @@ Item {
                }
 
                onClicked: {
-                   var un = usernameInput.text
-                   var pw = passwordInput.text
-                   if(un.length > 0 && pw.length > 0) {
+                   var success = LOGIN.tryLogin(userName, passWord)
+                   console.log(success)
+                   if(success == true) {
                        loginScreen.visible = false
                    }
                }
