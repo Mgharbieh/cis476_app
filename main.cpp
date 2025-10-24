@@ -1,11 +1,16 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
+#include "login.h"
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
-
     QQmlApplicationEngine engine;
+
+    Login loginObj;
+    engine.rootContext()->setContextProperty("LOGIN", &loginObj);
+
     const QUrl url(QStringLiteral("qrc:/cis476_app/Main.qml"));
     QObject::connect(
         &engine,

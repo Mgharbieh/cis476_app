@@ -23,56 +23,91 @@ Window {
     }
 
     Rectangle {
-        id: addnewItemContainer
+        id: demoWarning
+
+        width: parent.width
+        height: 40
+        z: 101
+
+        color: "transparent"
+        border.color: "#969696"
+
+        Text {
+            anchors.fill: parent
+
+            text: "!! UNSERCURE DEMO - DO NOT ENTER SENSITIVE INFORMATION !!"
+            color: "#FF0000"
+            font.bold: true
+            fontSizeMode: Text.Fit
+            wrapMode: Text.WordWrap
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+
+        }
+    }
+
+    Rectangle {
+        id: welcomeMsgRect
 
         anchors {
-            bottom: lightDarkMode.top
+            top: demoWarning.bottom
             left: parent.left
+            topMargin: 5
             bottomMargin: 10
             leftMargin: 30
         }
 
-        width: 80
-        height: 80
-        radius: 40
-        color: accent1color
+        width: 250
+        height: 120
+        color: "transparent"
+        //border.color: "#000000" // temporary, need to find bounding edges
 
-        // NOT WORKING, WILL INVESTIGATE LATER //
-        MultiEffect {
+        Text {
             anchors.fill: parent
-            source: parent
-            shadowEnabled: true
-            shadowScale: 1.0
-            shadowHorizontalOffset: 5
-            shadowVerticalOffset: 5
-            shadowColor: "#000000"
-            shadowOpacity: 0.7
-        }
+            color: textColor
+            fontSizeMode: Text.Fit
+            font.bold: true
+            font.pixelSize: 500
+            text: "Welcome,\n" + loginPage.userName + "!"
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
 
-
-        Rectangle {
-            id: crossHorizontal
-
-            anchors.centerIn: parent
-
-            width: 50
-            height: 5
-
-            color: backgroundcolor
-        }
-
-        Rectangle {
-            id: crossVertical
-
-            anchors.centerIn: parent
-
-            width: 5
-            height: 50
-
-            color: backgroundcolor
         }
     }
 
+
+    Rectangle {
+        id: buttonMenu
+
+        anchors {
+            top: welcomeMsgRect.bottom
+            bottom: lightDarkMode.top
+            left: parent.left
+            right: filler.left
+            topMargin: 5
+            bottomMargin: 10
+            leftMargin: 30
+            rightMargin: 20
+        }
+
+        border.color: "#000000"
+
+        Column {
+            spacing: 10
+
+            Rectangle {
+                id: websiteLoginButton
+
+                height: 40
+                width: parent.width
+                radius: 10
+
+                Button {
+                    anchors.fill: parentjf
+                }
+            }
+        }
+    }
 
     Switch {
         id: lightDarkMode
@@ -98,9 +133,9 @@ Window {
         id: filler
 
         anchors {
-            top: parent.top
+            top: demoWarning.bottom
             right: parent.right
-            left: addnewItemContainer.right
+            left: welcomeMsgRect.right
             bottom: lightDarkMode.top
             topMargin: 15
             leftMargin: 25
