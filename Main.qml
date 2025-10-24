@@ -8,6 +8,7 @@ Window {
 
     property string accent1color: "#144F85"
     property string backgroundcolor: "#FFFFFF"
+    property string backgroundcolor2: "#D0D0D0"
     property string textColor: "#000000"
 
     id: rootWindow
@@ -57,8 +58,8 @@ Window {
             leftMargin: 30
         }
 
-        width: 250
-        height: 120
+        width: 300
+        height: 150
         color: "transparent"
         //border.color: "#000000" // temporary, need to find bounding edges
 
@@ -75,35 +76,223 @@ Window {
         }
     }
 
+    Rectangle {
+        id: lineSpacer
+
+        width:300
+        height: 2
+        radius: 2
+
+        anchors {
+            top: welcomeMsgRect.bottom
+            left: parent.left
+            topMargin: 10
+            bottomMargin: 10
+            leftMargin: 30
+        }
+
+        color: "#969696"
+    }
 
     Rectangle {
         id: buttonMenu
 
         anchors {
-            top: welcomeMsgRect.bottom
+            top: lineSpacer.bottom
             bottom: lightDarkMode.top
             left: parent.left
             right: filler.left
-            topMargin: 5
+            topMargin: 15
             bottomMargin: 10
             leftMargin: 30
             rightMargin: 20
         }
 
-        border.color: "#000000"
+        //border.color: "#000000"
+        color: "transparent"
 
         Column {
-            spacing: 10
+            anchors.fill: parent
+            spacing: 30
 
             Rectangle {
-                id: websiteLoginButton
+                id: websiteButton
 
-                height: 40
+                height: 100
                 width: parent.width
                 radius: 10
+                color: accent1color
+
 
                 Button {
-                    anchors.fill: parentjf
+                    id: addWebsite
+                    anchors.centerIn: parent
+                    anchors.fill: parent
+
+                    text: "Website Login"
+                    font.pixelSize: 25
+                    font.bold: true
+                    flat: true
+
+                    contentItem: Text {
+                        text: addWebsite.text
+                        font: addWebsite.font
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        color: "#FFFFFF"
+                    }
+
+                    background: Rectangle {
+                        implicitWidth: parent.width
+                        implicitHeight: parent.height
+                        color: "transparent"
+                    }
+
+                    HoverHandler { cursorShape: Qt.PointingHandCursor }
+                }
+            }
+
+            Rectangle {
+                id: creditCardButton
+
+                height: 100
+                width: parent.width
+                radius: 10
+                color: accent1color
+
+                Button {
+                    id: addCreditCard
+                    anchors.fill: parent
+
+                    text: "Credit Card"
+                    font.pixelSize: 25
+                    font.bold: true
+                    flat: true
+
+                    contentItem: Text {
+                        anchors.centerIn: parent
+                        text: addCreditCard.text
+                        font: addCreditCard.font
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        color: "#FFFFFF"
+                    }
+
+                    background: Rectangle {
+                        implicitWidth: parent.width
+                        implicitHeight: parent.height
+                        color: "transparent"
+                    }
+
+                    HoverHandler { cursorShape: Qt.PointingHandCursor }
+                }
+            }
+
+            Rectangle {
+                id: identityButton
+
+                height: 100
+                width: parent.width
+                radius: 10
+                color: accent1color
+
+                Button {
+                    id: addIdentity
+                    anchors.fill: parent
+
+                    text: "ID Card"
+                    font.pixelSize: 25
+                    font.bold: true
+                    flat: true
+
+                    contentItem: Text {
+                        anchors.centerIn: parent
+                        text: addIdentity.text
+                        font: addIdentity.font
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        color: "#FFFFFF"
+                    }
+
+                    background: Rectangle {
+                        implicitWidth: parent.width
+                        implicitHeight: parent.height
+                        color: "transparent"
+                    }
+
+                    HoverHandler { cursorShape: Qt.PointingHandCursor }
+                }
+            }
+
+            Rectangle {
+                id: secureNoteButton
+
+                height: 100
+                width: parent.width
+                radius: 10
+                color: accent1color
+
+                Button {
+                    id: addNote
+                    anchors.fill: parent
+
+                    text: "Secure Note"
+                    font.pixelSize: 25
+                    font.bold: true
+                    flat: true
+
+                    contentItem: Text {
+                        anchors.centerIn: parent
+                        text: addNote.text
+                        font: addNote.font
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        color: "#FFFFFF"
+                    }
+
+                    background: Rectangle {
+                        implicitWidth: parent.width
+                        implicitHeight: parent.height
+                        color: "transparent"
+                    }
+
+                    HoverHandler { cursorShape: Qt.PointingHandCursor }
+                }
+            }
+
+            Rectangle {
+                id: logoutButton
+
+                height: 80
+                width: parent.width
+                radius: 10
+                color: "#FF0000"
+
+                Button {
+                    id: logout
+                    anchors.fill: parent
+
+                    text: "Logout"
+                    font.pixelSize: 25
+                    font.bold: true
+                    flat: true
+
+                    contentItem: Text {
+                        anchors.centerIn: parent
+                        text: logout.text
+                        font: logout.font
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        color: "#FFFFFF"
+                    }
+
+                    background: Rectangle {
+                        implicitWidth: parent.width
+                        implicitHeight: parent.height
+                        color: "transparent"
+                    }
+
+                    HoverHandler { cursorShape: Qt.PointingHandCursor }
                 }
             }
         }
@@ -144,7 +333,7 @@ Window {
         }
 
         border.color: "#969696"
-        color: "#D0D0D0"
+        color: backgroundcolor2
         radius: 20
 
         Component {
@@ -167,7 +356,9 @@ Window {
         Text {
             id: placeholderListText
             anchors.centerIn: parent
-            text: "Saved items will appear here\nClick the '+' to add a new item"
+            horizontalAlignment: Text.AlignHCenter
+            text: "Saved items will appear here.\nSelect an item from the left menu to add it."
+            color: textColor
             visible: savedList.count === 0 ? true : false
         }
     }
@@ -176,10 +367,12 @@ Window {
     function switchColorMode() {
         if(backgroundcolor == "#FFFFFF") {
             backgroundcolor = "#141414"
+            backgroundcolor2 = "#242424"
             textColor = "#FFFFFF"
         }
         else {
             backgroundcolor = "#FFFFFF"
+            backgroundcolor2 = "#D0D0D0"
             textColor = "#000000"
         }
     }
