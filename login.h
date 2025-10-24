@@ -11,6 +11,9 @@ class Login : public QObject
 private:
     inline static bool isLoggedIn = false;
 
+signals:
+    void logoutSignal();
+
 public:
     Login() {};
 
@@ -29,6 +32,12 @@ public:
         else
             return false;
     }
+
+    Q_INVOKABLE void logout() {
+        emit logoutSignal();
+        isLoggedIn = false;
+    }
+
 };
 
 #endif // LOGIN_H

@@ -293,6 +293,8 @@ Window {
                     }
 
                     HoverHandler { cursorShape: Qt.PointingHandCursor }
+
+                    onClicked: {LOGIN.logout()}
                 }
             }
         }
@@ -302,11 +304,26 @@ Window {
         id: lightDarkMode
         onClicked: switchColorMode()
 
-        height: 20
-        width: 60
+        //height: 20
+        //width: 60
 
-        background: {
-            color: lightDarkMode.checked ? accent1color : "#FFFFFF"
+        indicator: Rectangle {
+            implicitWidth: 48
+            implicitHeight: 26
+            x: lightDarkMode.leftPadding
+            y: parent.height / 2 - height / 2
+            radius: 13
+            color: lightDarkMode.checked ? accent1color : "#D0D0D0"
+            border.color: backgroundcolor2
+
+            Rectangle {
+                x: lightDarkMode.checked ? parent.width - width : 0
+                width: 26
+                height: 26
+                radius: 13
+                color: lightDarkMode.down ? "#CCCCCC" : "#FFFFFF"
+                border.color: backgroundcolor2
+            }
         }
 
         anchors {

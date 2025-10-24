@@ -12,6 +12,13 @@ Item {
     anchors.fill: parent
     z: 100
 
+    Connections {
+        target: LOGIN
+        onLogoutSignal: {
+            loginScreen.visible = true
+        }
+    }
+
     Rectangle {
         id: root
         anchors.fill: parent
@@ -196,6 +203,8 @@ Item {
                    console.log(success)
                    if(success == true) {
                        loginScreen.visible = false
+                       usernameInput.text = ""
+                       passwordInput.text = ""
                    }
                }
            }
