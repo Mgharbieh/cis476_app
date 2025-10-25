@@ -14,9 +14,8 @@ Item {
 
     Connections {
         target: LOGIN
-        onLogoutSignal: {
-            loginScreen.visible = true
-        }
+
+        function onLogoutSignal() { loginScreen.visible = true }
     }
 
     Rectangle {

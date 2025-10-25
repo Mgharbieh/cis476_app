@@ -11,6 +11,8 @@ Window {
     property string backgroundcolor2: "#D0D0D0"
     property string textColor: "#000000"
 
+    property bool isFocused: true
+
     id: rootWindow
     width: Screen.width
     height: Screen.height
@@ -128,6 +130,7 @@ Window {
                     id: addWebsite
                     anchors.centerIn: parent
                     anchors.fill: parent
+                    enabled: isFocused
 
                     text: "Website Login"
                     font.pixelSize: 25
@@ -149,6 +152,12 @@ Window {
                     }
 
                     HoverHandler { cursorShape: Qt.PointingHandCursor }
+
+                    onClicked: {
+                        isFocused = false
+                        backgroundRect.visible = true
+                        websiteGUIFrame.visible = true
+                    }
                 }
             }
 
@@ -163,6 +172,7 @@ Window {
                 Button {
                     id: addCreditCard
                     anchors.fill: parent
+                    enabled: isFocused
 
                     text: "Credit Card"
                     font.pixelSize: 25
@@ -199,6 +209,7 @@ Window {
                 Button {
                     id: addIdentity
                     anchors.fill: parent
+                    enabled: isFocused
 
                     text: "ID Card"
                     font.pixelSize: 25
@@ -235,6 +246,7 @@ Window {
                 Button {
                     id: addNote
                     anchors.fill: parent
+                    enabled: isFocused
 
                     text: "Secure Note"
                     font.pixelSize: 25
@@ -271,6 +283,7 @@ Window {
                 Button {
                     id: logout
                     anchors.fill: parent
+                    enabled: isFocused
 
                     text: "Logout"
                     font.pixelSize: 25
@@ -297,6 +310,37 @@ Window {
                     onClicked: {LOGIN.logout()}
                 }
             }
+        }
+    }
+
+    Rectangle {
+        id: backgroundRect
+        anchors.fill: parent
+
+        z: 2
+        color: (backgroundcolor == "#FFFFFF") ? "#000000" : "#FFFFFF"
+        opacity: 0.5
+        visible: false
+    }
+
+    Rectangle {
+        id: websiteGUIFrame
+        visible: false
+        color: backgroundcolor
+        radius: 20
+        z: 3
+
+        anchors {
+            top: parent.top
+            left:parent.left
+            right: parent.right
+            bottom: parent.bottom
+            margins: 100
+        }
+
+        WebsiteInfo {
+            id: websiteInputObj
+            anchors.fill: parent
         }
     }
 
