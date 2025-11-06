@@ -44,9 +44,11 @@ Item {
             top: titleText.bottom
             left: parent.left
             right: parent.right
+            bottom: parent.bottom
             topMargin: 20
             leftMargin: 30
             rightMargin: 30
+            bottomMargin: 30
         }
 
         Rectangle {
@@ -105,7 +107,7 @@ Item {
         }
 
         Rectangle {
-            id: websitePassRect
+            id: websiteUserRect
             color: "transparent"
 
             anchors {
@@ -119,7 +121,66 @@ Item {
             height: 40
 
             Text {
-                id: websitePassText
+                id: websiteUserText
+                anchors.fill: parent
+
+                text: "Username:  "
+                font.pixelSize: 25
+                color: rootWindow.textColor
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignRight
+            }
+        }
+
+
+        TextField {
+            id: websiteUserInput
+            anchors {
+                top: websiteNameRect.bottom
+                left: websitePassRect.right
+                right: showPassButton.left
+
+                topMargin: 20
+                rightMargin: 20
+            }
+
+            echoMode: "Normal"
+            font.pixelSize: 25
+            color: rootWindow.textColor
+            verticalAlignment: "AlignVCenter"
+            leftPadding: 5
+
+            placeholderText: "Enter your username"
+            placeholderTextColor: "#B8B8B8"
+
+            background: Rectangle {
+                color: "transparent"
+                border.color: "#969696"
+                border.width: 1
+            }
+
+            onEditingFinished: {
+                //debugging
+                console.log("Input finished:", websiteUserInput.text)
+            }
+        }
+
+        Rectangle {
+            id: websitePassRect
+            color: "transparent"
+
+            anchors {
+                top: websiteUserRect.bottom
+                left: parent.left
+
+                topMargin: 20
+            }
+
+            width: 195
+            height: 40
+
+            Text {
+                id: websitepassText
                 anchors.fill: parent
 
                 text: "Password:  "
@@ -134,8 +195,8 @@ Item {
         TextField {
             id: websitePassInput
             anchors {
-                top: websiteNameRect.bottom
-                left: websitePassRect.right
+                top: websiteUserRect.bottom
+                left: websiteUserRect.right
                 right: showPassButton.left
 
                 topMargin: 20
@@ -167,7 +228,7 @@ Item {
             id: showPassButton
 
             anchors {
-                top: websiteNameRect.bottom
+                top: websiteUserRect.bottom
                 right: parent.right
 
                 topMargin: 20
@@ -216,6 +277,116 @@ Item {
                        showHide.text = "show"
                        websitePassInput.echoMode = "Password"
                    }
+                }
+            }
+        }
+
+        Rectangle {
+            id: saveButtonRect
+
+            height: parent.height * .15
+            width: parent.width * .2
+            radius: 10
+            color: rootWindow.accent1color
+
+            anchors {
+                right: parent.right
+                bottom: parent.bottom
+
+                rightMargin: parent.width * 0.02
+                bottomMargin: parent.height * 0.02
+            }
+
+            Button {
+                id: saveWebsite
+                anchors.fill: parent
+                //enabled: isFocused
+
+                text: "Save"
+                font.pixelSize: 25
+                font.bold: true
+                flat: true
+
+                contentItem: Text {
+                    anchors.centerIn: parent
+                    text: saveWebsite.text
+                    font: saveWebsite.font
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    color: "#FFFFFF"
+                }
+
+                background: Rectangle {
+                    implicitWidth: parent.width
+                    implicitHeight: parent.height
+                    color: "transparent"
+                }
+
+
+                HoverHandler { cursorShape: Qt.PointingHandCursor }
+
+                onClicked: {
+                    // ADD SAVE FUNCTIONALITY HERE ONCE DATABASE IS IMPLEMENTED //
+
+                    website.parent.visible = false
+                    focusBackground.visible = false
+                    rootWindow.isFocused = true
+                }
+            }
+        }
+
+        Rectangle {
+            id: cancelButtonRect
+
+            height: parent.height * .15
+            width: parent.width * .2
+            radius: 10
+            color: "#FF0000"
+
+            anchors {
+                right: saveButtonRect.left
+                bottom: websiteFrame.bottom
+
+                rightMargin: parent.width * 0.02
+                bottomMargin: parent.height * 0.02
+            }
+
+            Button {
+                id: cancelWebsite
+                anchors.fill: parent
+                //enabled: isFocused
+
+                text: "Cancel"
+                font.pixelSize: 25
+                font.bold: true
+                flat: true
+
+                contentItem: Text {
+                    anchors.centerIn: parent
+                    text: cancelWebsite.text
+                    font: cancelWebsite.font
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    color: "#FFFFFF"
+                }
+
+                /*
+                background: Rectangle {
+                    implicitWidth: parent.width
+                    implicitHeight: parent.height
+                    color: "transparent"
+                }
+                */
+
+                HoverHandler { cursorShape: Qt.PointingHandCursor }
+
+                onClicked: {
+                    webisteInput.text = ""
+                    websiteUserInput.text = ""
+                    websitePassInput.text = ""
+                    website.parent.visible = false
+                    focusBackground.visible = false
+                    rootWindow.isFocused = true
                 }
             }
         }
