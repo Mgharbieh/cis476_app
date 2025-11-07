@@ -269,6 +269,12 @@ Window {
                     }
 
                     HoverHandler { cursorShape: Qt.PointingHandCursor }
+
+                    onClicked: {
+                        isFocused = false
+                        backgroundRect.visible = true
+                        noteGUIFrame.visible = true
+                    }
                 }
             }
 
@@ -321,7 +327,7 @@ Window {
         color: (backgroundcolor == "#FFFFFF") ? "#000000" : "#FFFFFF"
         opacity: 0.5
         visible: false
-    }
+    } property alias focusBackground: backgroundRect
 
     Rectangle {
         id: websiteGUIFrame
@@ -343,6 +349,28 @@ Window {
             anchors.fill: parent
         }
     }
+
+    Rectangle {
+        id: noteGUIFrame
+        visible: false
+        color: backgroundcolor
+        radius: 20
+        z: 3
+
+        anchors {
+            top: parent.top
+            left:parent.left
+            right: parent.right
+            bottom: parent.bottom
+            margins: 100
+        }
+
+        SecureNoteInfo {
+            id: noteInputObj
+            anchors.fill: parent
+        }
+    }
+
 
     Switch {
         id: lightDarkMode
