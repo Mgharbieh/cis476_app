@@ -17,7 +17,7 @@ Window {
     width: Screen.width
     height: Screen.height
     visible: true
-    title: qsTr("Hello World")
+    title: qsTr("MyPass")
 
     color: backgroundcolor
 
@@ -61,7 +61,7 @@ Window {
         }
 
         width: 300
-        height: 150
+        height: parent.height * 0.139
         color: "transparent"
         //border.color: "#000000" // temporary, need to find bounding edges
 
@@ -88,8 +88,8 @@ Window {
         anchors {
             top: welcomeMsgRect.bottom
             left: parent.left
-            topMargin: 10
-            bottomMargin: 10
+            topMargin: 5
+            bottomMargin: 5
             leftMargin: 30
         }
 
@@ -104,8 +104,8 @@ Window {
             bottom: lightDarkMode.top
             left: parent.left
             right: filler.left
-            topMargin: 15
-            bottomMargin: 10
+            topMargin: 10
+            bottomMargin: 5
             leftMargin: 30
             rightMargin: 20
         }
@@ -115,12 +115,12 @@ Window {
 
         Column {
             anchors.fill: parent
-            spacing: 30
+            spacing: parent.height * .05
 
             Rectangle {
                 id: websiteButton
 
-                height: 100
+                height: parent.height * .15
                 width: parent.width
                 radius: 10
                 color: accent1color
@@ -164,7 +164,7 @@ Window {
             Rectangle {
                 id: creditCardButton
 
-                height: 100
+                height: parent.height * .15
                 width: parent.width
                 radius: 10
                 color: accent1color
@@ -201,7 +201,7 @@ Window {
             Rectangle {
                 id: identityButton
 
-                height: 100
+                height: parent.height * .15
                 width: parent.width
                 radius: 10
                 color: accent1color
@@ -238,7 +238,7 @@ Window {
             Rectangle {
                 id: secureNoteButton
 
-                height: 100
+                height: parent.height * .15
                 width: parent.width
                 radius: 10
                 color: accent1color
@@ -269,13 +269,19 @@ Window {
                     }
 
                     HoverHandler { cursorShape: Qt.PointingHandCursor }
+
+                    onClicked: {
+                        isFocused = false
+                        backgroundRect.visible = true
+                        noteGUIFrame.visible = true
+                    }
                 }
             }
 
             Rectangle {
                 id: logoutButton
 
-                height: 80
+                height: parent.height * .15
                 width: parent.width
                 radius: 10
                 color: "#FF0000"
@@ -321,7 +327,7 @@ Window {
         color: (backgroundcolor == "#FFFFFF") ? "#000000" : "#FFFFFF"
         opacity: 0.5
         visible: false
-    }
+    } property alias focusBackground: backgroundRect
 
     Rectangle {
         id: websiteGUIFrame
@@ -343,6 +349,28 @@ Window {
             anchors.fill: parent
         }
     }
+
+    Rectangle {
+        id: noteGUIFrame
+        visible: false
+        color: backgroundcolor
+        radius: 20
+        z: 3
+
+        anchors {
+            top: parent.top
+            left:parent.left
+            right: parent.right
+            bottom: parent.bottom
+            margins: 100
+        }
+
+        SecureNoteInfo {
+            id: noteInputObj
+            anchors.fill: parent
+        }
+    }
+
 
     Switch {
         id: lightDarkMode
