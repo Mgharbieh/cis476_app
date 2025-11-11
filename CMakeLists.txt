@@ -18,10 +18,11 @@ qt_add_qml_module(appcis476_app
     QML_FILES
         Main.qml
         LoginPage.qml
+        WebsiteInfo.qml
 
     SOURCES
         login.h
-        QML_FILES WebsiteInfo.qml
+        QML_FILES SecureNoteInfo.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
