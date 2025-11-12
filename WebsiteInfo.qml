@@ -289,13 +289,15 @@ Item {
 
         Rectangle {
             id: pwdBuilderRect
-            width: 275
+            width: 280
             height: 40
             anchors {
                 top: websitePassInput.bottom
                 topMargin: 5
                 left: websitePassInput.left
             }
+
+            color: "transparent"
 
             Button {
                 id: pwdBuilderButton
@@ -316,7 +318,7 @@ Item {
                      id: pwdBuilderText
                      text: "Use auto-generated password"
                      font: parent.font
-                     color: "#0000EE"
+                     color: "#0081FF"
                      anchors.centerIn: parent
                 }
 
@@ -339,8 +341,8 @@ Item {
         Rectangle {
             id: missingFieldRect
 
-            height: parent.height * 0.1
-            width: parent.width * 0.20
+            height: parent.height * 0.10
+            width: parent.width * 0.40
 
             anchors {
                 top: pwdBuilderRect.bottom

@@ -253,7 +253,7 @@ Item {
                     id: registerText
                     text: "Click here to register"
                     font: parent.font
-                    color: "#0000EE"
+                    color: "#0081FF"
                     anchors.centerIn: parent
                }
 
