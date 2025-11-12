@@ -27,7 +27,7 @@ Item {
 
         Text {
             id: title
-            text: "Add Webiste"
+            text: "Add Website"
 
             font.pixelSize: 40
             font.bold: true
@@ -78,7 +78,7 @@ Item {
 
 
         TextField {
-            id: webisteInput
+            id: websiteInput
             anchors {
                 top: parent.top
                 left: websiteNameRect.right
@@ -95,6 +95,7 @@ Item {
             placeholderTextColor: "#B8B8B8"
 
             background: Rectangle {
+                id: textInputBackground
                 color: "transparent"
                 border.color: "#969696"
                 border.width: 1
@@ -103,6 +104,7 @@ Item {
             onEditingFinished: {
                 //debugging
                 console.log("Input finished:", websiteInput.text)
+                textInputBackground.border.color = "#969696"
              }
         }
 
@@ -154,6 +156,7 @@ Item {
             placeholderTextColor: "#B8B8B8"
 
             background: Rectangle {
+                id: userInputBackground
                 color: "transparent"
                 border.color: "#969696"
                 border.width: 1
@@ -162,6 +165,7 @@ Item {
             onEditingFinished: {
                 //debugging
                 console.log("Input finished:", websiteUserInput.text)
+                userInputBackground.border.color = "#969696"
             }
         }
 
@@ -209,10 +213,11 @@ Item {
             verticalAlignment: "AlignVCenter"
             leftPadding: 5
 
-            placeholderText: "[Put auto-generated password here]"
+            placeholderText: "Enter password"
             placeholderTextColor: "#B8B8B8"
 
             background: Rectangle {
+                id: passInputBackground
                 color: "transparent"
                 border.color: "#969696"
                 border.width: 1
@@ -221,6 +226,7 @@ Item {
             onEditingFinished: {
                 //debugging
                 console.log("Input finished:", websitePassInput.text)
+                passInputBackground.border.color = "#969696"
             }
         }
 
@@ -282,6 +288,85 @@ Item {
         }
 
         Rectangle {
+            id: pwdBuilderRect
+            width: 275
+            height: 40
+            anchors {
+                top: websitePassInput.bottom
+                topMargin: 5
+                left: websitePassInput.left
+            }
+
+            Button {
+                id: pwdBuilderButton
+                width: 175
+                height: 30
+                anchors{
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                }
+
+                font{
+                    pixelSize: 18
+                    underline: true
+                }
+
+                contentItem: Text {
+                     id: pwdBuilderText
+                     text: "Use auto-generated password"
+                     font: parent.font
+                     color: "#0000EE"
+                     anchors.centerIn: parent
+                }
+
+                background: Rectangle {
+                    color: "transparent"
+                    radius: 10
+                }
+
+                HoverHandler {
+                    cursorShape: Qt.PointingHandCursor
+                }
+
+                onClicked: {
+                    websitePassInput.text = PASSBUILDER.build(10) //10 chars long, can be changed
+                    passInputBackground.border.color = "#969696"
+                }
+            }
+        }
+
+        Rectangle {
+            id: missingFieldRect
+
+            height: parent.height * 0.1
+            width: parent.width * 0.20
+
+            anchors {
+                top: pwdBuilderRect.bottom
+                topMargin: 5
+                horizontalCenter: parent.horizontalCenter
+            }
+
+            border.width: 1
+            border.color: "#FF0000"
+            radius: 5
+            color: "#30FF0000" // 80 is alpha value
+
+            Text {
+                color: "#FF0000"
+                text: "Please enter missing fields"
+                anchors.fill: parent
+                font.pixelSize: 16
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            visible: false
+        }
+
+
+        Rectangle {
             id: saveButtonRect
 
             height: parent.height * .15
@@ -327,10 +412,34 @@ Item {
 
                 onClicked: {
                     // ADD SAVE FUNCTIONALITY HERE ONCE DATABASE IS IMPLEMENTED //
+                    var incomplete = false
+                    if(websiteInput.text == "")
+                    {
+                        textInputBackground.border.color = "#FF0000"
+                        incomplete = true
+                    }
+                    if(websiteUserInput.text == "")
+                    {
+                        userInputBackground.border.color = "#FF0000"
+                        incomplete = true
+                    }
+                    if(websitePassInput.text == "")
+                    {
+                        passInputBackground.border.color = "#FF0000"
+                        incomplete = true
+                    }
 
-                    website.parent.visible = false
-                    focusBackground.visible = false
-                    rootWindow.isFocused = true
+                    if(incomplete == false)
+                    {
+                        website.parent.visible = false
+                        focusBackground.visible = false
+                        rootWindow.isFocused = true
+                        missingFieldRect.visible = false
+                    }
+                    else
+                    {
+                        missingFieldRect.visible = true
+                    }
                 }
             }
         }
@@ -381,12 +490,17 @@ Item {
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
                 onClicked: {
-                    webisteInput.text = ""
+                    websiteInput.text = ""
                     websiteUserInput.text = ""
                     websitePassInput.text = ""
                     website.parent.visible = false
                     focusBackground.visible = false
                     rootWindow.isFocused = true
+
+                    textInputBackground.border.color = "#969696"
+                    userInputBackground.border.color = "#969696"
+                    passInputBackground.border.color = "#969696"
+                    missingFieldRect.visible = false
                 }
             }
         }

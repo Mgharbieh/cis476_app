@@ -232,7 +232,7 @@ Item {
                font.pixelSize: 18
                color: "#B5B5B5"
                visible: true
-               topPadding: 5
+               //topPadding: 5
            }
 
            Button {
