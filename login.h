@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QtQml>
 
+#include <QtSql>
+#include <QDebug>
+
 class Login : public QObject
 {
     Q_OBJECT
@@ -19,18 +22,44 @@ public:
 
     Q_INVOKABLE bool tryLogin(QString user, QString pass)
     {
-        if(isLoggedIn == false)
-        {
-            if((user == "Bob") && (pass == "Password"))
-            {
+        // Skip if logged in flag is true. Don't allow another login attempt pretty much
+        if (isLoggedIn)
+            return false;
+
+        // Returns database connection from main.cpp
+        QSqlDatabase db = QSqlDatabase::database();
+        if (!db.isOpen()) {
+            qWarning() << "DB not open, falling back to hardcoded login";
+        } else {
+            // Create query object
+            QSqlQuery query;
+
+            //Find a row where both the username and password matching
+            query.prepare("SELECT id FROM login_db "
+                          "WHERE username = ? AND password = ?");
+
+            // Bind in order, user gets first "?", pass gets binded to second "?" above
+            query.addBindValue(user);
+            query.addBindValue(pass);
+
+            // Show log if failed, return true if successed
+            if (!query.exec()) {
+                qWarning() << "Login query failed:" << query.lastError().text();
+            } else if (query.next()) {
+
+                // Found a matching row
                 isLoggedIn = true;
                 return true;
             }
-            else
-                return false;
         }
-        else
-            return false;
+
+        // hardcoded fallback
+        if ((user == "Bob") && (pass == "Password")) {
+            isLoggedIn = true;
+            return true;
+        }
+
+        return false;
     }
 
     Q_INVOKABLE void logout() {
