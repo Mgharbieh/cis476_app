@@ -23,7 +23,28 @@ Window {
 
     LoginPage{
         id: loginPage
+
+        onCreateAccountClicked: {
+            loginPage.visible = true
+            registerPage.visible = true
+        }
     }
+
+
+    RegisterUser{
+        id: registerPage
+
+        onBackToLoginRequested: {
+            registerPage.visible = false
+            loginPage.visible = true
+        }
+
+        onRegisterRequested:{
+            registerPage.visible = false
+            loginPage.visible = true
+        }
+    }
+
 
     Rectangle {
         id: demoWarning

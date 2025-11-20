@@ -12,6 +12,8 @@ Item {
     anchors.fill: parent
     z: 100
 
+    signal createAccountClicked()
+
     Connections {
         target: LOGIN
 
@@ -265,6 +267,9 @@ Item {
                HoverHandler {
                     cursorShape: Qt.PointingHandCursor
                }
+
+               onClicked: loginScreen.createAccountClicked()
+
            }
        }
     }

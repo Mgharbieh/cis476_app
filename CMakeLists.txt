@@ -19,6 +19,8 @@ qt_add_qml_module(appcis476_app
         Main.qml
         LoginPage.qml
         WebsiteInfo.qml
+        RegisterUser.qml
+
 
     SOURCES
         login.h
