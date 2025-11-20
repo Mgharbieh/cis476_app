@@ -272,5 +272,56 @@ Item {
 
            }
        }
+
+       Rectangle {
+           id: quickLoginRect
+           width: 500
+           height: 40
+
+           anchors {
+               top: loginButtonRect.bottom
+               topMargin: 50
+               horizontalCenter: parent.horizontalCenter
+           }
+
+           color: "transparent"
+
+           Button {
+               id: quickLoginButton
+               width: 500
+               height: 40
+               anchors.centerIn: parent
+
+               text: "Quick Dev Login"
+               font.pixelSize: 22
+               font.bold: true
+               flat: true
+
+               contentItem: Text {
+                   text: quickLoginButton.text
+                   font: quickLoginButton.font
+                   anchors.centerIn: parent
+                   color: "#000000" // bright red for "danger"
+               }
+
+               background: Rectangle {
+                   color: "transparent"
+                   radius: 6
+                   border.color: "#000000"
+                   border.width: 2
+               }
+
+               HoverHandler {
+                   cursorShape: Qt.PointingHandCursor
+               }
+
+               onClicked: {
+                   console.log("QUICK DEV LOGIN TRIGGERED")
+                   loginScreen.visible = false
+                   usernameInput.text = ""
+                   passwordInput.text = ""
+               }
+           }
+       }
     }
 }
