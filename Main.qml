@@ -10,7 +10,9 @@ Window {
     property string backgroundcolor: "#FFFFFF"
     property string backgroundcolor2: "#D0D0D0"
     property string textColor: "#000000"
-
+    property alias creditCardWindow: creditCardGUIFrame
+    property alias idCardWindow: idCardGUIFrame
+    property alias backgroundRect: backgroundRect
     property bool isFocused: true
 
     id: rootWindow
@@ -216,6 +218,12 @@ Window {
                     }
 
                     HoverHandler { cursorShape: Qt.PointingHandCursor }
+
+                    onClicked: {
+                        isFocused = false
+                        backgroundRect.visible = true
+                        creditCardGUIFrame.visible = true
+                    }
                 }
             }
 
@@ -253,6 +261,11 @@ Window {
                     }
 
                     HoverHandler { cursorShape: Qt.PointingHandCursor }
+                    onClicked: {
+                        isFocused = false
+                        backgroundRect.visible = true
+                        idCardGUIFrame.visible = true
+                    }
                 }
             }
 
@@ -367,6 +380,48 @@ Window {
 
         WebsiteInfo {
             id: websiteInputObj
+            anchors.fill: parent
+        }
+    }
+
+    Rectangle {
+        id: creditCardGUIFrame
+        visible: false
+        color: backgroundcolor
+        radius: 20
+        z: 3
+
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+            margins: 100
+        }
+
+        CreditCard {
+            id: creditCardInputObj
+            anchors.fill: parent
+        }
+    }
+
+    Rectangle {
+        id: idCardGUIFrame
+        visible: false
+        color: backgroundcolor
+        radius: 20
+        z: 3
+
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+            margins: 100
+        }
+
+        IDCard {
+            id: idCardInputObj
             anchors.fill: parent
         }
     }

@@ -26,6 +26,8 @@ qt_add_qml_module(appcis476_app
         login.h
         QML_FILES SecureNoteInfo.qml
         SOURCES passwordGenerator.h
+        QML_FILES CreditCard.qml
+        QML_FILES IDCard.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
