@@ -174,7 +174,35 @@ Item {
             }
         }
 
+        Rectangle {
+            id: missingFieldRect
 
+            height: parent.height * 0.10
+            width: parent.width * 0.40
+
+            anchors {
+                bottom: textEditRect.bottom
+                bottomMargin: 5
+                horizontalCenter: parent.horizontalCenter
+            }
+
+            z: 4
+            border.width: 1
+            border.color: "#FF0000"
+            radius: 5
+            color: "#30FF0000" // 80 is alpha value
+
+            Text {
+                color: "#FF0000"
+                text: "Please enter missing fields"
+                anchors.fill: parent
+                font.pixelSize: 16
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            visible: false
+        }
 
 
         Rectangle {
@@ -223,10 +251,23 @@ Item {
 
                 onClicked: {
                     // ADD SAVE FUNCTIONALITY HERE ONCE DATABASE IS IMPLEMENTED //
+                    var incomplete = false
+                    if(secureNoteName.text == "")
+                    {
+                        secureNoteName.background.border.color = "#FF0000"
+                        incomplete = true
+                    }
 
-                    note.parent.visible = false
-                    focusBackground.visible = false
-                    rootWindow.isFocused = true
+                    if(incomplete == false) {
+                        note.parent.visible = false
+                        focusBackground.visible = false
+                        rootWindow.isFocused = true
+                        secureNoteName.background.border.color = "#969696"
+                        missingFieldRect.visible = false
+                    }
+                    else {
+                      missingFieldRect.visible = true
+                    }
                 }
             }
         }
@@ -282,6 +323,8 @@ Item {
                     note.parent.visible = false
                     focusBackground.visible = false
                     rootWindow.isFocused = true
+                    secureNoteName.background.border.color = "#969696"
+                    missingFieldRect.visible = false
                 }
             }
         }
