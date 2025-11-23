@@ -6,6 +6,7 @@
 
 #include "login.h"
 #include "passwordGenerator.h"
+#include "databasehandler.h"
 
 static void initDatabase()
 {
@@ -40,12 +41,15 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
-    initDatabase();
-
     Login loginObj;
     PassBuilder pwdGen;
+    DatabaseHandler data;
+    data.initDatabase();
+
+
     engine.rootContext()->setContextProperty("LOGIN", &loginObj);
     engine.rootContext()->setContextProperty("PASSBUILDER", &pwdGen);
+    engine.rootContext()->setContextProperty("DATABASE", &data);
 
     const QUrl url(QStringLiteral("qrc:/cis476_app/Main.qml"));
     QObject::connect(

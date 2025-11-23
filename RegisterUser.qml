@@ -11,17 +11,7 @@ Item {
 
     // hook these up later to C++/DB
     signal backToLoginRequested()
-    signal registerRequested(
-        string email,
-        string masterPassword,
-        string confirmPassword,
-        string question1,
-        string answer1,
-        string question2,
-        string answer2,
-        string question3,
-        string answer3
-    )
+    signal registerRequested()
 
     property string emailText: ""
     property string masterPasswordText: ""
@@ -64,7 +54,7 @@ Item {
                 TextField {
                     id: emailField
                     text: registerScreen.emailText
-                    onTextChanged: registerScreen.emailText = text
+                    onTextChanged: registerScreen.emailText = emailField.text
                     placeholderText: "you@example.com"
                 }
             }
@@ -78,7 +68,7 @@ Item {
                     echoMode: TextInput.Password
                     placeholderText: "Enter master password"
                     text: registerScreen.masterPasswordText
-                    onTextChanged: registerScreen.masterPasswordText = text
+                    onTextChanged: registerScreen.masterPasswordText = masterField.text
                 }
             }
 
@@ -90,7 +80,7 @@ Item {
                     echoMode: TextInput.Password
                     placeholderText: "Re-enter master password"
                     text: registerScreen.confirmPasswordText
-                    onTextChanged: registerScreen.confirmPasswordText = text
+                    onTextChanged: registerScreen.confirmPasswordText = confirmField.text
                 }
             }
 
@@ -104,7 +94,7 @@ Item {
                         id: q1Field
                         placeholderText: "Security question 1"
                         text: registerScreen.q1Text
-                        onTextChanged: registerScreen.q1Text = text
+                        onTextChanged: registerScreen.q1Text = q1Field.text
                     }
                 }
                 Column {
@@ -114,7 +104,7 @@ Item {
                         id: a1Field
                         placeholderText: "Answer"
                         text: registerScreen.a1Text
-                        onTextChanged: registerScreen.a1Text = text
+                        onTextChanged: registerScreen.a1Text = a1Field.text
                     }
                 }
             }
@@ -128,7 +118,7 @@ Item {
                         id: q2Field
                         placeholderText: "Security question 2"
                         text: registerScreen.q2Text
-                        onTextChanged: registerScreen.q2Text = text
+                        onTextChanged: registerScreen.q2Text = q2Field.text
                     }
                 }
                 Column {
@@ -138,7 +128,7 @@ Item {
                         id: a2Field
                         placeholderText: "Answer"
                         text: registerScreen.a2Text
-                        onTextChanged: registerScreen.a2Text = text
+                        onTextChanged: registerScreen.a2Text = a2Field.text
                     }
                 }
             }
@@ -152,7 +142,7 @@ Item {
                         id: q3Field
                         placeholderText: "Security question 3"
                         text: registerScreen.q3Text
-                        onTextChanged: registerScreen.q3Text = text
+                        onTextChanged: registerScreen.q3Text = q3Field.text
                     }
                 }
                 Column {
@@ -162,7 +152,7 @@ Item {
                         id: a3Field
                         placeholderText: "Answer"
                         text: registerScreen.a3Text
-                        onTextChanged: registerScreen.a3Text = text
+                        onTextChanged: registerScreen.a3Text = a3Field.text
                     }
                 }
             }
@@ -184,17 +174,15 @@ Item {
                     text: "Register"
                     onClicked: {
                         //add validation here.
-                        registerScreen.registerRequested(
-                            registerScreen.emailText,
-                            registerScreen.masterPasswordText,
-                            registerScreen.confirmPasswordText,
-                            registerScreen.q1Text,
-                            registerScreen.a1Text,
-                            registerScreen.q2Text,
-                            registerScreen.a2Text,
-                            registerScreen.q3Text,
-                            registerScreen.a3Text
-                        )
+
+                        if(masterPasswordText === confirmPasswordText) {
+                            console.log("attempting to register account...")
+                            DATABASE.registerAccount(emailText, masterPasswordText, q1Text, a1Text, q2Text, a2Text, q3Text, a3Text)
+                            registerScreen.backToLoginRequested()
+                        }
+                        else {
+                            console.log("Password does not match!")
+                        }
                     }
                 }
             }

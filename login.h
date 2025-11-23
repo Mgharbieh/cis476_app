@@ -35,7 +35,7 @@ public:
             QSqlQuery query;
 
             //Find a row where both the username and password matching
-            query.prepare("SELECT id FROM login_db "
+            query.prepare("SELECT id FROM accounts "
                           "WHERE username = ? AND password = ?");
 
             // Bind in order, user gets first "?", pass gets binded to second "?" above
