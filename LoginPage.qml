@@ -13,6 +13,7 @@ Item {
     z: 100
 
     signal createAccountClicked()
+    signal recoverAccountClicked()
 
     Connections {
         target: LOGIN
@@ -143,12 +144,74 @@ Item {
        }
 
        Rectangle {
+           id: recoverAccRect
+           width: 500
+           height: 40
+           anchors {
+               top: password.bottom
+               topMargin: 5
+               horizontalCenter: parent.horizontalCenter
+           }
+
+           Text {
+               id: recover
+               height: 30
+               anchors{
+                   top: parent.top
+                   left: parent.left
+                   leftMargin: 20
+               }
+
+               text: "Recover Master Password? "
+               font.pixelSize: 18
+               color: "#B5B5B5"
+               visible: true
+               //topPadding: 5
+           }
+
+           Button {
+               id: recoverButton
+               width: 175
+               height: 30
+               anchors{
+                   top: parent.top
+                   left: recover.right
+               }
+
+               font{
+                   pixelSize: 18
+                   underline: true
+               }
+
+               contentItem: Text {
+                    id: recoverText
+                    text: "Recover"
+                    font: parent.font
+                    color: "#0081FF"
+                    anchors.centerIn: parent
+               }
+
+               background: Rectangle {
+                   color: "transparent"
+                   radius: 10
+               }
+
+               HoverHandler {
+                    cursorShape: Qt.PointingHandCursor
+               }
+
+               onClicked: loginScreen.recoverAccountClicked()
+
+           }
+       }
+
+       Rectangle {
            id: loginButtonRect
            width: 500
            height: 80
 
            anchors {
-               top: password.bottom
+               top: recoverAccRect.bottom
                topMargin: 5
                horizontalCenter: parent.horizontalCenter
            }
