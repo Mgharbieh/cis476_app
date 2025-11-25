@@ -48,6 +48,8 @@ public:
             } else if (query.next()) {
 
                 // Found a matching row
+                QString loginID = query.value(0).toString();
+
                 isLoggedIn = true;
                 return true;
             }
