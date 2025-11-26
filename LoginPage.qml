@@ -90,12 +90,21 @@ Item {
                placeholderText: "Username"
                placeholderTextColor: "#B8B8B8"
 
+               onTextChanged: {
+                              if(usernameInput.text.length === 0){
+                                         recoverText.color = "#444444"
+                                         recoverButton.enabled = false
+                              } else{
+                                         recoverText.color = "#0081FF"
+                                         recoverButton.enabled = true
+                              }
+               }
 
                onEditingFinished: {
                    //debugging
                    console.log("Input finished:", usernameInput.text)
                    userName = usernameInput.text
-                }
+               }
            }
        }
 
@@ -173,6 +182,7 @@ Item {
                id: recoverButton
                width: 175
                height: 30
+               enabled: false
                anchors{
                    top: parent.top
                    left: recover.right
@@ -187,7 +197,7 @@ Item {
                     id: recoverText
                     text: "Recover"
                     font: parent.font
-                    color: "#0081FF"
+                    color: "#444444"
                     anchors.centerIn: parent
                }
 
@@ -200,8 +210,16 @@ Item {
                     cursorShape: Qt.PointingHandCursor
                }
 
-               onClicked: loginScreen.recoverAccountClicked()
-
+               onClicked: { 
+                   if(LOGIN.accountExists(userName)){
+                              loginScreen.recoverAccountClicked()
+                              recover.text = "Recover Master Password?"
+                   }
+                   else{
+                              recover.text = "account does not exist"
+                              recover.color = "#FF5555"
+                   }
+               }
            }
        }
 

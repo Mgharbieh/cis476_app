@@ -35,6 +35,8 @@ qt_add_qml_module(appcis476_app
         SOURCES databasehandler.h databasehandler.cpp
         SOURCES SecurityQuestionHandler.h
         SOURCES SecurityQuestionHandler.cpp
+        SOURCES SessionManager.h
+        QML_FILES RecoverPassPage.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -58,3 +60,11 @@ install(TARGETS appcis476_app
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# MSVC requires this for proper __cplusplus value
+if (MSVC)
+    add_compile_options(/Zc:__cplusplus)
+endif()

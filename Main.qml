@@ -30,6 +30,12 @@ Window {
             loginPage.visible = true
             registerPage.visible = true
         }
+
+        onRecoverAccountClicked: {
+            loginPage.visible = true
+            loginPage.enabled = false
+            recoverPassPage.visible = true
+        }
     }
 
 
@@ -46,6 +52,18 @@ Window {
             loginPage.visible = true
         }
     }
+
+
+    RecoverPassPage{
+        id: recoverPassPage
+
+        onBackToLoginRequested: {
+            recoverPassPage.visible = false
+            loginPage.visible = true
+            loginPage.enabled = true
+        }
+    }
+
 
 
     Rectangle {
