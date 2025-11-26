@@ -13,6 +13,7 @@ Item {
     z: 100
 
     signal createAccountClicked()
+    signal recoverAccountClicked()
 
     Connections {
         target: LOGIN
@@ -89,12 +90,21 @@ Item {
                placeholderText: "Username"
                placeholderTextColor: "#B8B8B8"
 
+               onTextChanged: {
+                              if(usernameInput.text.length === 0){
+                                         recoverText.color = "#444444"
+                                         recoverButton.enabled = false
+                              } else{
+                                         recoverText.color = "#0081FF"
+                                         recoverButton.enabled = true
+                              }
+               }
 
                onEditingFinished: {
                    //debugging
                    console.log("Input finished:", usernameInput.text)
                    userName = usernameInput.text
-                }
+               }
            }
        }
 
@@ -143,12 +153,83 @@ Item {
        }
 
        Rectangle {
+           id: recoverAccRect
+           width: 500
+           height: 40
+           anchors {
+               top: password.bottom
+               topMargin: 5
+               horizontalCenter: parent.horizontalCenter
+           }
+
+           Text {
+               id: recover
+               height: 30
+               anchors{
+                   top: parent.top
+                   left: parent.left
+                   leftMargin: 20
+               }
+
+               text: "Recover Master Password? "
+               font.pixelSize: 18
+               color: "#B5B5B5"
+               visible: true
+               //topPadding: 5
+           }
+
+           Button {
+               id: recoverButton
+               width: 175
+               height: 30
+               enabled: false
+               anchors{
+                   top: parent.top
+                   left: recover.right
+               }
+
+               font{
+                   pixelSize: 18
+                   underline: true
+               }
+
+               contentItem: Text {
+                    id: recoverText
+                    text: "Recover"
+                    font: parent.font
+                    color: "#444444"
+                    anchors.centerIn: parent
+               }
+
+               background: Rectangle {
+                   color: "transparent"
+                   radius: 10
+               }
+
+               HoverHandler {
+                    cursorShape: Qt.PointingHandCursor
+               }
+
+               onClicked: { 
+                   if(LOGIN.accountExists(userName)){
+                              loginScreen.recoverAccountClicked()
+                              recover.text = "Recover Master Password?"
+                   }
+                   else{
+                              recover.text = "account does not exist"
+                              recover.color = "#FF5555"
+                   }
+               }
+           }
+       }
+
+       Rectangle {
            id: loginButtonRect
            width: 500
            height: 80
 
            anchors {
-               top: password.bottom
+               top: recoverAccRect.bottom
                topMargin: 5
                horizontalCenter: parent.horizontalCenter
            }
