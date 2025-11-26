@@ -11,3 +11,6 @@ void Website::notifyObservers(){
 
 }
 
+QString Website::getURL() { return ""; }
+QString Website::getUserName() { return ""; }
+QString Website::getPassword() {return ""; }

@@ -1,10 +1,12 @@
 #ifndef DATABASEHANDLER_H
 #define DATABASEHANDLER_H
 
+#include <vector>
 #include <QObject>
 #include <QtQml>
 #include <QUuid>
 #include <QtSql>
+#include "Secret.h"
 
 class DatabaseHandler : public QObject
 {
@@ -14,6 +16,16 @@ private:
     inline static QSqlDatabase db;
     QString user_ID;
     QString user_name;
+    std::vector<ISecret*> vault;
+
+    Website* webPointer;
+    // ADD OTHER TYPE POINTERS HERE
+
+    void loadSavedData();
+
+signals:
+    void itemLoaded(QString type, QString title, int idx);
+    void websiteLoaded(QString URL, QString User, QString Pass);
 
 public slots:
     void userLogin(QString uuid, QString name);
@@ -28,6 +40,8 @@ public:
     Q_INVOKABLE void saveCC(QString name, QString ccNum, QString ccv, QString expiryDate, QString zipCode);
     Q_INVOKABLE void saveIDCard(QString name, QString bday, QString gender, QString height, QString address);
     Q_INVOKABLE void saveNote(QString name, QString text);
+
+    Q_INVOKABLE void loadWebsite(int index);
 };
 
 #endif // DATABASEHANDLER_H

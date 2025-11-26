@@ -2,11 +2,51 @@
 
 DatabaseHandler::DatabaseHandler() {}
 
+void DatabaseHandler::loadSavedData()
+{
+    QSqlQuery query;
+
+    //Find a row where both the username and password matching
+    query.prepare("SELECT * FROM vault_db "
+                  "WHERE id = ? AND user_id = ?");
+    query.bindValue(0, user_ID);
+    query.bindValue(1, user_name);
+    query.exec();
+
+    while(query.next())
+    {
+        QString type = query.value("type").toString();
+
+        if(type == "website")
+        {
+            QString url = query.value("url").toString();
+            QString user = query.value("username").toString();
+            QString pass = query.value("password").toString();
+
+            Website* website = new Website(url, user, pass);
+            vault.push_back(website);
+            emit itemLoaded("website", url, vault.size() - 1);
+        }
+        else if(type == "credit card")
+        {
+
+        }
+        else if(type == "ID card")
+        {
+
+        }
+        else if(type == "secure note")
+        {
+
+        }
+    }
+}
+
 void DatabaseHandler::userLogin(QString id, QString name)
 {
     user_ID = id;
     user_name = name;
-    //qDebug() << user_ID;
+    loadSavedData();
 }
 
 void DatabaseHandler::initDatabase()
@@ -125,4 +165,9 @@ void DatabaseHandler::saveNote(QString name, QString text)
     query.bindValue(3, name);
     query.bindValue(4, text);
     query.exec();
+}
+
+void DatabaseHandler::loadWebsite(int index)
+{
+
 }
