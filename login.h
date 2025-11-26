@@ -16,6 +16,7 @@ private:
 
 signals:
     void logoutSignal();
+    void loginSignal(QString userID, QString userName);
 
 public:
     Login() {};
@@ -51,6 +52,7 @@ public:
                 QString loginID = query.value(0).toString();
 
                 isLoggedIn = true;
+                emit loginSignal(loginID, user);
                 return true;
             }
         }

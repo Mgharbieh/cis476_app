@@ -8,34 +8,6 @@
 #include "passwordGenerator.h"
 #include "databasehandler.h"
 
-static void initDatabase()
-{
-
-
-    qDebug() << "Available SQL drivers:" << QSqlDatabase::drivers();
-    // Use the PostgreSQL driver
-    QSqlDatabase db = QSqlDatabase::addDatabase("QODBC");
-
-    // Build an ODBC connection string.
-    QString connStr =
-        "Driver={PostgreSQL ODBC Driver(UNICODE)};"
-        "Server=shinkansen.proxy.rlwy.net;"
-        "Port=17700;"
-        "Database=railway;"
-        "Uid=postgres;"
-        "Pwd=AXKYvzjVxofQHczfQgVsxcSGWSjWtiZF;"
-        "SSLmode=require;";
-
-    db.setDatabaseName(connStr);
-
-    if (!db.open()) {
-        qWarning() << "ODBC connection failed:" << db.lastError().text();
-    } else {
-        qInfo() << "Connected to PostgreSQL on Railway via ODBC!";
-    }
-}
-
-
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
@@ -44,9 +16,10 @@ int main(int argc, char *argv[])
     Login loginObj;
     PassBuilder pwdGen;
     DatabaseHandler data;
+
+    QObject::connect(&loginObj, &Login::loginSignal, &data, &DatabaseHandler::userLogin);
+
     data.initDatabase();
-
-
     engine.rootContext()->setContextProperty("LOGIN", &loginObj);
     engine.rootContext()->setContextProperty("PASSBUILDER", &pwdGen);
     engine.rootContext()->setContextProperty("DATABASE", &data);

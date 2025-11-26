@@ -2,6 +2,13 @@
 
 DatabaseHandler::DatabaseHandler() {}
 
+void DatabaseHandler::userLogin(QString id, QString name)
+{
+    user_ID = id;
+    user_name = name;
+    //qDebug() << user_ID;
+}
+
 void DatabaseHandler::initDatabase()
 {
     if(isConnected == false)
@@ -58,5 +65,64 @@ void DatabaseHandler::registerAccount(QString user, QString pass, QString q1, QS
     query.bindValue(6, a2);
     query.bindValue(7, q3);
     query.bindValue(8, a3);
+    query.exec();
+}
+
+void DatabaseHandler::saveWebsite(QString url, QString user, QString pass)
+{
+    QSqlQuery query;
+    query.prepare("INSERT INTO vault_db (id, user_id, type, username, password, url) "
+                  "VALUES (?, ?, ?, ?, ?, ?)");
+    query.bindValue(0, user_ID);
+    query.bindValue(1, user_name);
+    query.bindValue(2, "website");
+    query.bindValue(3, user);
+    query.bindValue(4, pass);
+    query.bindValue(5, url);
+    query.exec();
+}
+
+void DatabaseHandler::saveCC(QString name, QString ccNum, QString ccv, QString expiryDate, QString zipCode)
+{
+    QSqlQuery query;
+    query.prepare("INSERT INTO vault_db (id, user_id, type, name, credit_num, credit_cvv, expiration, zip_code) "
+                  "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    query.bindValue(0, user_ID);
+    query.bindValue(1, user_name);
+    query.bindValue(2, "credit card");
+    query.bindValue(3, name);
+    query.bindValue(4, ccNum);
+    query.bindValue(5, ccv);
+    query.bindValue(6, expiryDate);
+    query.bindValue(7, zipCode);
+    query.exec();
+}
+
+void DatabaseHandler::saveIDCard(QString name, QString bday, QString gender, QString height, QString address)
+{
+    QSqlQuery query;
+    query.prepare("INSERT INTO vault_db (id, user_id, type, name, birthday, gender, height, address) "
+                  "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    query.bindValue(0, user_ID);
+    query.bindValue(1, user_name);
+    query.bindValue(2, "ID card");
+    query.bindValue(3, name);
+    query.bindValue(4, bday);
+    query.bindValue(5, gender);
+    query.bindValue(6, height);
+    query.bindValue(7, address);
+    query.exec();
+}
+
+void DatabaseHandler::saveNote(QString name, QString text)
+{
+    QSqlQuery query;
+    query.prepare("INSERT INTO vault_db (id, user_id, type, title, note) "
+                  "VALUES (?, ?, ?, ?, ?)");
+    query.bindValue(0, user_ID);
+    query.bindValue(1, user_name);
+    query.bindValue(2, "secure note");
+    query.bindValue(3, name);
+    query.bindValue(4, text);
     query.exec();
 }

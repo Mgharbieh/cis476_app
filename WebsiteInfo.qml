@@ -433,6 +433,8 @@ Item {
 
                     if(incomplete == false)
                     {
+                        DATABASE.saveWebsite(websiteInput.text, websiteUserInput.text, websitePassInput.text)
+
                         website.parent.visible = false
                         focusBackground.visible = false
                         rootWindow.isFocused = true
