@@ -23,6 +23,19 @@ Window {
 
     color: backgroundcolor
 
+    Connections {
+        target: DATABASE
+
+        function onItemLoaded(type, title, idx) {
+            var newElem = {
+                "type": type,
+                "title": title,
+                "index": idx
+            }
+            savedModel.append(newElem)
+        }
+    }
+
     LoginPage{
         id: loginPage
 
@@ -465,6 +478,27 @@ Window {
         }
     }
 
+    Rectangle {
+        id: editWebsiteGUIFrame
+        visible: false
+        color: backgroundcolor
+        radius: 20
+        z: 3
+
+        anchors {
+            top: parent.top
+            left:parent.left
+            right: parent.right
+            bottom: parent.bottom
+            margins: 100
+        }
+
+        EditWebsiteInfo {
+            id: editWebsiteObj
+            anchors.fill: parent
+        }
+    }
+
 
     Switch {
         id: lightDarkMode
@@ -500,6 +534,25 @@ Window {
         }
     }
 
+    Rectangle {
+        id: fillerBorder
+
+        anchors {
+            top: demoWarning.bottom
+            right: parent.right
+            left: welcomeMsgRect.right
+            bottom: lightDarkMode.top
+            topMargin: 15
+            leftMargin: 25
+            rightMargin: 25
+            bottomMargin: 10
+        }
+
+        radius: 20
+        border.color: "#969696"
+        color: "transparent"
+        z: 3
+    }
 
     Rectangle {
         id: filler
@@ -515,7 +568,7 @@ Window {
             bottomMargin: 10
         }
 
-        border.color: "#969696"
+        //border.color: "#969696"
         color: backgroundcolor2
         radius: 20
 
@@ -524,16 +577,87 @@ Window {
             Item {
                 id: savedItem
                 width: parent.width; height: 40
-                Column {
-                    Text { text: '<b>Name:</b> ' + myItem.name }
+                Rectangle {
+                    anchors.fill: parent
+                    Text {
+                        anchors {
+                            right: parent.right
+                            top: parent.top
+                            rightMargin: 5
+                            topMargin: 5
+                        }
+
+
+                    }
                 }
             }
+        }
+
+        ListModel {
+            id: savedModel
         }
 
         ListView {
             id: savedList
             anchors.fill: parent
             orientation: Qt.Vertical
+            model: savedModel
+
+            delegate: Item {
+                width: parent.width-2; height: 45
+                Rectangle {
+                    anchors {
+                        fill: parent
+                        margins: 1
+                    }
+
+                    color: backgroundcolor
+
+                    Text {
+                        anchors {
+                            left: parent.left
+                            top: parent.top
+                            rightMargin: 5
+                            topMargin: 5
+                        }
+
+                        text: model.title
+                        font.pixelSize: 19
+                        color: textColor
+                    }
+                    Text {
+                        anchors {
+                            left: parent.left
+                            bottom: parent.bottom
+                            rightMargin: 5
+                            topMargin: 5
+                        }
+
+                        text: model.type
+                        font.pixelSize: 16
+                        color: "#969696"
+                    }
+
+                    Button {
+                        id: accessElement
+                        anchors.fill: parent
+                        enabled: isFocused
+                        flat: true
+
+                        background: Rectangle {
+                            implicitWidth: parent.width
+                            implicitHeight: parent.height
+                            color: "transparent"
+                        }
+
+                        HoverHandler { cursorShape: Qt.PointingHandCursor }
+
+                        onClicked: {
+                            viewSavedData(model.type, model.title, model.index)
+                        }
+                    }
+                }
+            }
         }
 
         Text {
@@ -558,6 +682,14 @@ Window {
             backgroundcolor2 = "#D0D0D0"
             textColor = "#000000"
         }
+    }
+
+    function viewSavedData(type, title, idx) {
+        isFocused = false
+        backgroundRect.visible = true
+        editWebsiteGUIFrame.visible = true
+
+
     }
 }
 

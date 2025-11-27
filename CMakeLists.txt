@@ -33,10 +33,14 @@ qt_add_qml_module(appcis476_app
         SOURCES Account.h
         SOURCES Secrets.cpp
         SOURCES databasehandler.h databasehandler.cpp
+<<<<<<< HEAD
         SOURCES SecurityQuestionHandler.h
         SOURCES SecurityQuestionHandler.cpp
         SOURCES SessionManager.h
         QML_FILES RecoverPassPage.qml
+=======
+        QML_FILES EditWebsiteInfo.qml
+>>>>>>> origin/database_branch
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

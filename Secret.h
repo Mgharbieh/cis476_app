@@ -27,8 +27,9 @@ protected:
     std::vector<IObserver*> observers_;
 };
 
-class Website : ISecret{
+class Website : public ISecret{
 private:
+    const QString type = "website";
     QString url;
     QString username;
     Password password = Password();
@@ -36,6 +37,9 @@ private:
 public:
     Website(QString url, QString username, QString password);
     void notifyObservers() override;
+    QString getURL();
+    QString getUserName();
+    QString getPassword();
 };
 
 #endif // SECRET_H

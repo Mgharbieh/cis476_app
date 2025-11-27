@@ -21,8 +21,12 @@ private:
 
 signals:
     void logoutSignal();
+<<<<<<< HEAD
     void accountChanged();
 
+=======
+    void loginSignal(QString userID, QString userName);
+>>>>>>> origin/database_branch
 
 public:
 
@@ -61,6 +65,7 @@ public:
                 QString loginID = query.value(0).toString();
 
                 isLoggedIn = true;
+                emit loginSignal(loginID, user);
                 return true;
             }
         }

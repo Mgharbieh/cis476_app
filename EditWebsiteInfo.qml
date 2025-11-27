@@ -8,6 +8,9 @@ Item {
     property string loginUserName: ""
     property string loginPassWord: ""
 
+    property string copyToClipboard: "📋"
+    property bool editable: false
+
     id: website
 
     anchors.fill: parent
@@ -27,7 +30,7 @@ Item {
 
         Text {
             id: title
-            text: "Add Website"
+            text: "Saved Website"
 
             font.pixelSize: 40
             font.bold: true
@@ -60,7 +63,7 @@ Item {
                 left:parent.left
             }
 
-            width: 195
+            width: 155
             height: 40
             //border.color: "black"
 
@@ -90,6 +93,7 @@ Item {
             color: rootWindow.textColor
             verticalAlignment: "AlignVCenter"
             leftPadding: 5
+            enabled: editable
 
             placeholderText: "www.example.com"
             placeholderTextColor: "#B8B8B8"
@@ -97,7 +101,7 @@ Item {
             background: Rectangle {
                 id: textInputBackground
                 color: "transparent"
-                border.color: "#969696"
+                border.color: editable == true ? "#969696" : "transparent"
                 border.width: 1
             }
 
@@ -106,6 +110,37 @@ Item {
                 console.log("Input finished:", websiteInput.text)
                 textInputBackground.border.color = "#969696"
              }
+        }
+
+        Rectangle {
+            id: copyUrlRect
+
+            anchors {
+                top: parent.top
+                left: showHide.right
+                right: parent.right
+            }
+
+            width: 40
+            height: 40
+            color: "transparent"
+            border.color: accent1color
+            border.width: 1
+            radius: 8
+
+            Text {
+                id: copyUrlText
+                anchors.centerIn: parent
+
+                text: copyToClipboard
+                color: accent1color
+                font.pixelSize: 26
+
+                ToolTip.text: "Copy to clipboard"
+                ToolTip.visible: hovered
+
+                HoverHandler { cursorShape: Qt.PointingHandCursor }
+            }
         }
 
         Rectangle {
@@ -119,7 +154,7 @@ Item {
                 topMargin: 20
             }
 
-            width: 195
+            width: 155
             height: 40
 
             Text {
@@ -151,6 +186,7 @@ Item {
             color: rootWindow.textColor
             verticalAlignment: "AlignVCenter"
             leftPadding: 5
+            enabled: editable
 
             placeholderText: "Enter your username"
             placeholderTextColor: "#B8B8B8"
@@ -158,7 +194,7 @@ Item {
             background: Rectangle {
                 id: userInputBackground
                 color: "transparent"
-                border.color: "#969696"
+                border.color: editable == true ? "#969696" : "transparent"
                 border.width: 1
             }
 
@@ -166,6 +202,39 @@ Item {
                 //debugging
                 console.log("Input finished:", websiteUserInput.text)
                 userInputBackground.border.color = "#969696"
+            }
+        }
+
+        Rectangle {
+            id: copyUserRect
+
+            anchors {
+                top: websiteNameRect.bottom
+                left: showHide.right
+                right: parent.right
+
+                topMargin: 20
+            }
+
+            width: 40
+            height: 40
+            color: "transparent"
+            border.color: accent1color
+            border.width: 1
+            radius: 8
+
+            Text {
+                id: copyUserText
+                anchors.centerIn: parent
+
+                text: copyToClipboard
+                color: accent1color
+                font.pixelSize: 26
+
+                ToolTip.text: "Copy to clipboard"
+                ToolTip.visible: hovered
+
+                HoverHandler { cursorShape: Qt.PointingHandCursor }
             }
         }
 
@@ -180,7 +249,7 @@ Item {
                 topMargin: 20
             }
 
-            width: 195
+            width: 155
             height: 40
 
             Text {
@@ -212,6 +281,7 @@ Item {
             color: rootWindow.textColor
             verticalAlignment: "AlignVCenter"
             leftPadding: 5
+            enabled: editable
 
             placeholderText: "Enter password"
             placeholderTextColor: "#B8B8B8"
@@ -219,13 +289,12 @@ Item {
             background: Rectangle {
                 id: passInputBackground
                 color: "transparent"
-                border.color: "#969696"
+                border.color: editable == true ? "#969696" : "transparent"
                 border.width: 1
             }
 
             onEditingFinished: {
                 //debugging
-                console.log("Input finished:", websitePassInput.text)
                 passInputBackground.border.color = "#969696"
             }
         }
@@ -235,10 +304,11 @@ Item {
 
             anchors {
                 top: websiteUserRect.bottom
-                right: parent.right
+                right: copyPassRect.left
 
                 topMargin: 20
-                leftMargin: 10
+                leftMargin: 5
+                rightMargin: 10
             }
 
             color: "transparent"
@@ -288,53 +358,32 @@ Item {
         }
 
         Rectangle {
-            id: pwdBuilderRect
-            width: 280
-            height: 40
+            id: copyPassRect
+
             anchors {
-                top: websitePassInput.bottom
-                topMargin: 5
-                left: websitePassInput.left
+                top: websiteUserRect.bottom
+                left: showHide.right
+                right: parent.right
+
+                topMargin: 20
             }
 
+            width: 40
+            height: 40
             color: "transparent"
+            border.color: accent1color
+            border.width: 1
+            radius: 8
 
-            Button {
-                id: pwdBuilderButton
-                width: 175
-                height: 30
-                anchors{
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                }
+            Text {
+                id: copyPassText
+                anchors.centerIn: parent
 
-                font{
-                    pixelSize: 18
-                    underline: true
-                }
+                text: copyToClipboard
+                color: accent1color
+                font.pixelSize: 26
 
-                contentItem: Text {
-                     id: pwdBuilderText
-                     text: "Use auto-generated password"
-                     font: parent.font
-                     color: "#0081FF"
-                     anchors.centerIn: parent
-                }
-
-                background: Rectangle {
-                    color: "transparent"
-                    radius: 10
-                }
-
-                HoverHandler {
-                    cursorShape: Qt.PointingHandCursor
-                }
-
-                onClicked: {
-                    websitePassInput.text = PASSBUILDER.build(10) //10 chars long, can be changed
-                    passInputBackground.border.color = "#969696"
-                }
+                HoverHandler { cursorShape: Qt.PointingHandCursor }
             }
         }
 
@@ -345,7 +394,7 @@ Item {
             width: parent.width * 0.40
 
             anchors {
-                top: pwdBuilderRect.bottom
+                top: showPassButton.bottom
                 topMargin: 5
                 horizontalCenter: parent.horizontalCenter
             }
@@ -389,7 +438,7 @@ Item {
                 anchors.fill: parent
                 //enabled: isFocused
 
-                text: "Save"
+                text: "Edit"
                 font.pixelSize: 25
                 font.bold: true
                 flat: true
@@ -413,6 +462,7 @@ Item {
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
                 onClicked: {
+                    // ADD SAVE FUNCTIONALITY HERE ONCE DATABASE IS IMPLEMENTED //
                     var incomplete = false
                     if(websiteInput.text == "")
                     {
@@ -432,12 +482,31 @@ Item {
 
                     if(incomplete == false)
                     {
-                        DATABASE.saveWebsite(websiteInput.text, websiteUserInput.text, websitePassInput.text)
+                        if(editable == false) {
+                            websiteName = websiteInput.text
+                            loginUserName = websiteUserInput.text
+                            loginPassWord = websitePassInput.text
 
-                        website.parent.visible = false
-                        focusBackground.visible = false
-                        rootWindow.isFocused = true
-                        missingFieldRect.visible = false
+                            editable = true
+                            saveWebsite.text = "Update"
+                        }
+                        else if(editable == true)
+                        {
+                            if(websiteName !== websiteInput.text) {
+
+                            }
+                            if(loginUserName !== websiteUserInput.text) {
+
+                            }
+                            if(loginPassWord !== websitePassInput.text) {
+
+                            }
+
+                            website.parent.visible = false
+                            focusBackground.visible = false
+                            rootWindow.isFocused = true
+                            missingFieldRect.visible = false
+                        }
                     }
                     else
                     {
@@ -468,7 +537,7 @@ Item {
                 anchors.fill: parent
                 //enabled: isFocused
 
-                text: "Cancel"
+                text: "Close"
                 font.pixelSize: 25
                 font.bold: true
                 flat: true
@@ -481,14 +550,6 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     color: "#FFFFFF"
                 }
-
-                /*
-                background: Rectangle {
-                    implicitWidth: parent.width
-                    implicitHeight: parent.height
-                    color: "transparent"
-                }
-                */
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
