@@ -7,6 +7,7 @@
 #include <QUuid>
 #include <QtSql>
 #include "Secret.h"
+#include "notificationObservers.h"
 
 class DatabaseHandler : public QObject
 {
@@ -16,16 +17,24 @@ private:
     inline static QSqlDatabase db;
     QString user_ID;
     QString user_name;
+
     std::vector<ISecret*> vault;
 
     Website* webPointer;
     // ADD OTHER TYPE POINTERS HERE
+
+    WeakPasswordObserver _weakObserver;
+    ExpirationObserver   _expirationObserver;
 
     void loadSavedData();
 
 signals:
     void itemLoaded(QString type, QString title, int idx);
     void websiteLoaded(QString URL, QString User, QString Pass);
+
+    void weakPasswordFlagged(int idx);
+    void expiryIssueFlagged(int idx);
+
 
 public slots:
     void userLogin(QString uuid, QString name);
@@ -42,6 +51,9 @@ public:
     Q_INVOKABLE void saveNote(QString name, QString text);
 
     Q_INVOKABLE void loadWebsite(int index);
+
+    void reportWeakPassword(ISecret* secret);
+    void reportExpiryIssue(ISecret* secret);
 };
 
 #endif // DATABASEHANDLER_H

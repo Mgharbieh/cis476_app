@@ -11,11 +11,9 @@
 
 int main(int argc, char *argv[])
 {
-<<<<<<< HEAD
-    auto& session = SessionManager::getInstance(argc, argv);
-    session.run();
-    return session.app.exec();
-=======
+  // auto& session = SessionManager::getInstance(argc, argv);
+   // session.run();
+   // return session.app.exec();
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
@@ -40,5 +38,4 @@ int main(int argc, char *argv[])
     engine.load(url);
 
     return app.exec();
->>>>>>> origin/database_branch
 }

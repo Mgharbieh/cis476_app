@@ -613,6 +613,8 @@ Window {
 
                     color: backgroundcolor
 
+
+
                     Text {
                         anchors {
                             left: parent.left
@@ -621,7 +623,7 @@ Window {
                             topMargin: 5
                         }
 
-                        text: model.title
+                        text: title
                         font.pixelSize: 19
                         color: textColor
                     }
@@ -633,7 +635,7 @@ Window {
                             topMargin: 5
                         }
 
-                        text: model.type
+                        text: type
                         font.pixelSize: 16
                         color: "#969696"
                     }
@@ -653,7 +655,7 @@ Window {
                         HoverHandler { cursorShape: Qt.PointingHandCursor }
 
                         onClicked: {
-                            viewSavedData(model.type, model.title, model.index)
+                            viewSavedData(type, title, index)
                         }
                     }
                 }
@@ -685,9 +687,19 @@ Window {
     }
 
     function viewSavedData(type, title, idx) {
-        isFocused = false
-        backgroundRect.visible = true
-        editWebsiteGUIFrame.visible = true
+        if (type === "website") {
+
+               // Ask C++ to emit websiteLoaded for this index
+               DATABASE.loadWebsite(idx)
+
+               isFocused = false
+               backgroundRect.visible = true
+               editWebsiteGUIFrame.visible = true
+        }
+
+        //isFocused = false
+        //backgroundRect.visible = true
+        //editWebsiteGUIFrame.visible = true
 
 
     }

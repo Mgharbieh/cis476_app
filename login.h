@@ -21,12 +21,8 @@ private:
 
 signals:
     void logoutSignal();
-<<<<<<< HEAD
     void accountChanged();
-
-=======
     void loginSignal(QString userID, QString userName);
->>>>>>> origin/database_branch
 
 public:
 

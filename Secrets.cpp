@@ -8,9 +8,13 @@ Website::Website(QString url, QString username, QString password){
 }
 
 void Website::notifyObservers(){
-
+    for (auto* obs : observers_){
+        if(obs){
+            obs->update(this);
+        }
+    }
 }
 
-QString Website::getURL() { return ""; }
-QString Website::getUserName() { return ""; }
-QString Website::getPassword() {return ""; }
+QString Website::getURL() { return url; }
+QString Website::getUserName() { return username; }
+QString Website::getPassword() {return password.getPassword(); }

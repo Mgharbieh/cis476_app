@@ -15,32 +15,34 @@ qt_add_executable(appcis476_app
 qt_add_qml_module(appcis476_app
     URI cis476_app
     VERSION 1.0
+
+    # All QML files
     QML_FILES
         Main.qml
         LoginPage.qml
         WebsiteInfo.qml
         RegisterUser.qml
+        SecureNoteInfo.qml
+        CreditCard.qml
+        IDCard.qml
+        RecoverPassPage.qml
+        EditWebsiteInfo.qml
 
-
+    # All C++ headers/sources
     SOURCES
         login.h
-        QML_FILES SecureNoteInfo.qml
-        SOURCES passwordGenerator.h
-        QML_FILES CreditCard.qml
-        QML_FILES IDCard.qml
-        SOURCES Secret.h
-        SOURCES Observer.h
-        SOURCES Account.h
-        SOURCES Secrets.cpp
-        SOURCES databasehandler.h databasehandler.cpp
-<<<<<<< HEAD
-        SOURCES SecurityQuestionHandler.h
-        SOURCES SecurityQuestionHandler.cpp
-        SOURCES SessionManager.h
-        QML_FILES RecoverPassPage.qml
-=======
-        QML_FILES EditWebsiteInfo.qml
->>>>>>> origin/database_branch
+        passwordGenerator.h
+        Secret.h
+        Observer.h
+        Account.h
+        Secrets.cpp
+        databasehandler.h
+        databasehandler.cpp
+        SecurityQuestionHandler.h
+        SecurityQuestionHandler.cpp
+        SessionManager.h
+        SOURCES notificationObservers.h
+        SOURCES notificationObservers.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

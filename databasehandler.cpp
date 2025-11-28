@@ -1,6 +1,7 @@
 #include "databasehandler.h"
 
-DatabaseHandler::DatabaseHandler() {}
+DatabaseHandler::DatabaseHandler(): _weakObserver(this), _expirationObserver(this)
+{}
 
 void DatabaseHandler::loadSavedData()
 {
@@ -25,7 +26,12 @@ void DatabaseHandler::loadSavedData()
 
             Website* website = new Website(url, user, pass);
             vault.push_back(website);
-            emit itemLoaded("website", url, vault.size() - 1);
+            int idx = static_cast<int>(vault.size() - 1);
+
+            website->registerObserver(&_weakObserver);
+
+            website->notifyObservers();
+            emit itemLoaded("website", url, idx);
         }
         else if(type == "credit card")
         {
@@ -120,6 +126,21 @@ void DatabaseHandler::saveWebsite(QString url, QString user, QString pass)
     query.bindValue(4, pass);
     query.bindValue(5, url);
     query.exec();
+
+    // Create that in memory secret shhhhh :)
+    Website* website = new Website(url, user, pass);
+
+    vault.push_back(website);
+    int idx = static_cast<int>(vault.size() - 1);
+
+    // Register the weak password observer for Website
+    website->registerObserver(&_weakObserver);
+
+    // Check immediately
+    website->notifyObservers();
+
+    // Notify QML that a new item exists
+    emit itemLoaded("website", url, idx);
 }
 
 void DatabaseHandler::saveCC(QString name, QString ccNum, QString ccv, QString expiryDate, QString zipCode)
@@ -169,5 +190,39 @@ void DatabaseHandler::saveNote(QString name, QString text)
 
 void DatabaseHandler::loadWebsite(int index)
 {
+    if (index < 0 || index >= static_cast<int>(vault.size()))
+        return;
 
+    Website* website = dynamic_cast<Website*>(vault[index]);
+    if (!website)
+        return;
+
+    qDebug() << "Loading website at index" << index
+              << website->getURL()
+              << website->getUserName()
+              << website->getPassword();
+
+    emit websiteLoaded(website->getURL(),
+                       website->getUserName(),
+                       website->getPassword());
+}
+
+void DatabaseHandler::reportWeakPassword(ISecret* secret)
+{
+    auto it = std::find(vault.begin(), vault.end(), secret);
+    if (it == vault.end())
+        return;
+
+    int idx = static_cast<int>(std::distance(vault.begin(), it));
+    emit weakPasswordFlagged(idx);
+}
+
+void DatabaseHandler::reportExpiryIssue(ISecret* secret)
+{
+    auto it = std::find(vault.begin(), vault.end(), secret);
+    if (it == vault.end())
+        return;
+
+    int idx = static_cast<int>(std::distance(vault.begin(), it));
+    emit expiryIssueFlagged(idx);
 }

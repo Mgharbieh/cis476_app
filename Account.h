@@ -17,7 +17,7 @@ public:
     SecurityQuestionHandler handler;
     std::vector<QString> questions;
 
-    void update() override{}
+    void update(ISecret* subject) override{}
 
     Account(){}
 
