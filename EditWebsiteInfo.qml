@@ -15,6 +15,29 @@ Item {
 
     anchors.fill: parent
 
+    Connections {
+          target: DATABASE
+
+          function onWebsiteLoaded(URL, User, Pass) {
+              console.log("EditWebsiteInfo: websiteLoaded", URL, User, Pass)
+
+              // Fill the fields
+              websiteInput.text = URL
+              websiteUserInput.text = User
+              websitePassInput.text = Pass
+
+              // Start in read-only mode
+              editable = false
+              saveWebsite.text = "Edit"
+
+              // Remember the original values if needed later
+              websiteName = URL
+              loginUserName = User
+              loginPassWord = Pass
+          }
+      }
+
+
     Rectangle {
         id: titleText
         anchors {
