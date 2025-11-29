@@ -7,6 +7,7 @@
 #include "login.h"
 #include "passwordGenerator.h"
 #include "databasehandler.h"
+#include "copyhandler.h"
 #include "SessionManager.h"
 
 int main(int argc, char *argv[])
@@ -20,6 +21,7 @@ int main(int argc, char *argv[])
     Login loginObj;
     PassBuilder pwdGen;
     DatabaseHandler data;
+    CopyHandler copy;
 
     QObject::connect(&loginObj, &Login::loginSignal, &data, &DatabaseHandler::userLogin);
 
@@ -27,6 +29,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("LOGIN", &loginObj);
     engine.rootContext()->setContextProperty("PASSBUILDER", &pwdGen);
     engine.rootContext()->setContextProperty("DATABASE", &data);
+    engine.rootContext()->setContextProperty("CLIPBOARD", &copy);
 
     const QUrl url(QStringLiteral("qrc:/cis476_app/Main.qml"));
     QObject::connect(

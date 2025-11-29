@@ -7,36 +7,21 @@ Item {
     property string websiteName: ""
     property string loginUserName: ""
     property string loginPassWord: ""
+    property int currentItem: -1
 
     property string copyToClipboard: "📋"
     property bool editable: false
+    property bool hidden: true
 
     id: website
 
     anchors.fill: parent
 
-    Connections {
-          target: DATABASE
-
-          function onWebsiteLoaded(URL, User, Pass) {
-              console.log("EditWebsiteInfo: websiteLoaded", URL, User, Pass)
-
-              // Fill the fields
-              websiteInput.text = URL
-              websiteUserInput.text = User
-              websitePassInput.text = Pass
-
-              // Start in read-only mode
-              editable = false
-              saveWebsite.text = "Edit"
-
-              // Remember the original values if needed later
-              websiteName = URL
-              loginUserName = User
-              loginPassWord = Pass
-          }
-      }
-
+    Timer {
+        id: copyNotifTimer
+        interval: 1250
+        onTriggered: copyToClipboardRect.visible = false
+    }
 
     Rectangle {
         id: titleText
@@ -104,11 +89,11 @@ Item {
 
 
         TextField {
-            id: websiteInput
+            id: editWebsiteInput
             anchors {
                 top: parent.top
                 left: websiteNameRect.right
-                right: websitePassInput.right
+                right: editWebsitePassInput.right
             }
 
             echoMode: "Normal"
@@ -130,7 +115,7 @@ Item {
 
             onEditingFinished: {
                 //debugging
-                console.log("Input finished:", websiteInput.text)
+                console.log("Input finished:", editWebsiteInput.text)
                 textInputBackground.border.color = "#969696"
              }
         }
@@ -151,6 +136,23 @@ Item {
             border.width: 1
             radius: 8
 
+            Button {
+                id: copyUrlButton
+                anchors.fill: parent
+                anchors.margins: 1
+
+                background: Rectangle {
+                    color: "transparent"
+                    border.color: "transparent"
+                }
+
+                onClicked: {
+                    CLIPBOARD.copyText(editWebsiteInput.text)
+                    copyToClipboardRect.visible = true
+                    copyNotifTimer.start()
+                }
+            }
+
             Text {
                 id: copyUrlText
                 anchors.centerIn: parent
@@ -163,7 +165,7 @@ Item {
                 ToolTip.visible: hovered
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
-            }
+            } 
         }
 
         Rectangle {
@@ -194,7 +196,7 @@ Item {
 
 
         TextField {
-            id: websiteUserInput
+            id: editWebsiteUserInput
             anchors {
                 top: websiteNameRect.bottom
                 left: websitePassRect.right
@@ -223,7 +225,7 @@ Item {
 
             onEditingFinished: {
                 //debugging
-                console.log("Input finished:", websiteUserInput.text)
+                console.log("Input finished:", editWebsiteUserInput.text)
                 userInputBackground.border.color = "#969696"
             }
         }
@@ -245,6 +247,23 @@ Item {
             border.color: accent1color
             border.width: 1
             radius: 8
+
+            Button {
+                id: copyUserButton
+                anchors.fill: parent
+                anchors.margins: 1
+
+                background: Rectangle {
+                    color: "transparent"
+                    border.color: "transparent"
+                }
+
+                onClicked: {
+                    CLIPBOARD.copyText(editWebsiteUserInput.text)
+                    copyToClipboardRect.visible = true
+                    copyNotifTimer.start()
+                }
+            }
 
             Text {
                 id: copyUserText
@@ -289,7 +308,7 @@ Item {
 
 
         TextField {
-            id: websitePassInput
+            id: editWebsitePassInput
             anchors {
                 top: websiteUserRect.bottom
                 left: websiteUserRect.right
@@ -299,7 +318,7 @@ Item {
                 rightMargin: 20
             }
 
-            echoMode: "Password"
+            echoMode: hidden === true ? "Password" : "Normal"
             font.pixelSize: 25
             color: rootWindow.textColor
             verticalAlignment: "AlignVCenter"
@@ -347,7 +366,7 @@ Item {
                 anchors.centerIn: parent
                 anchors.fill: parent
 
-                text: "show"
+                text: hidden === true ? "show" : "hide"
                 font.pixelSize: 25
                 flat: true
 
@@ -368,14 +387,7 @@ Item {
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
                 onClicked: {
-                   if(showHide.text === "show") {
-                       showHide.text = "hide"
-                       websitePassInput.echoMode = "Normal"
-                   }
-                   else {
-                       showHide.text = "show"
-                       websitePassInput.echoMode = "Password"
-                   }
+                   hidden = !hidden
                 }
             }
         }
@@ -397,6 +409,23 @@ Item {
             border.color: accent1color
             border.width: 1
             radius: 8
+
+            Button {
+                id: copyPassButton
+                anchors.fill: parent
+                anchors.margins: 1
+
+                background: Rectangle {
+                    color: "transparent"
+                    border.color: "transparent"
+                }
+
+                onClicked: {
+                    CLIPBOARD.copyText(editWebsitePassInput.text)
+                    copyToClipboardRect.visible = true
+                    copyNotifTimer.start()
+                }
+            }
 
             Text {
                 id: copyPassText
@@ -439,6 +468,34 @@ Item {
             visible: false
         }
 
+        Rectangle {
+            id: copyToClipboardRect
+
+            height: parent.height * 0.10
+            width: parent.width * 0.40
+
+            anchors {
+                bottom: cancelButtonRect.top
+                bottomMargin: 5
+                horizontalCenter: parent.horizontalCenter
+            }
+
+            border.width: 1
+            border.color: "#00FF00"
+            radius: 5
+            color: "#3000FF00" // 80 is alpha value
+
+            Text {
+                color: "#00FF00"
+                text: "Copied to clipboard!"
+                anchors.fill: parent
+                font.pixelSize: 16
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            visible: false
+        }
 
         Rectangle {
             id: saveButtonRect
@@ -461,7 +518,7 @@ Item {
                 anchors.fill: parent
                 //enabled: isFocused
 
-                text: "Edit"
+                text: editable === true ? "Update" : "Edit"
                 font.pixelSize: 25
                 font.bold: true
                 flat: true
@@ -487,17 +544,17 @@ Item {
                 onClicked: {
                     // ADD SAVE FUNCTIONALITY HERE ONCE DATABASE IS IMPLEMENTED //
                     var incomplete = false
-                    if(websiteInput.text == "")
+                    if(editWebsiteInput.text == "")
                     {
                         textInputBackground.border.color = "#FF0000"
                         incomplete = true
                     }
-                    if(websiteUserInput.text == "")
+                    if(editWebsiteUserInput.text == "")
                     {
                         userInputBackground.border.color = "#FF0000"
                         incomplete = true
                     }
-                    if(websitePassInput.text == "")
+                    if(editWebsitePassInput.text == "")
                     {
                         passInputBackground.border.color = "#FF0000"
                         incomplete = true
@@ -506,29 +563,45 @@ Item {
                     if(incomplete == false)
                     {
                         if(editable == false) {
-                            websiteName = websiteInput.text
-                            loginUserName = websiteUserInput.text
-                            loginPassWord = websitePassInput.text
+                            websiteName = editWebsiteInput.text
+                            loginUserName = editWebsiteUserInput.text
+                            loginPassWord = editWebsitePassInput.text
 
+                            textInputBackground.border.color = "#969696"
+                            userInputBackground.border.color = "#969696"
+                            passInputBackground.border.color = "#969696"
                             editable = true
-                            saveWebsite.text = "Update"
                         }
                         else if(editable == true)
                         {
-                            if(websiteName !== websiteInput.text) {
-
+                            var changed = false
+                            if(websiteName !== editWebsiteInput.text) {
+                                DATABASE.updateField(currentItem, "website", editWebsiteInput.text, "url", editWebsiteInput.text)
+                                changed = true
                             }
-                            if(loginUserName !== websiteUserInput.text) {
-
+                            if(loginUserName !== editWebsiteUserInput.text) {
+                                DATABASE.updateField(currentItem, "website", editWebsiteInput.text, "username", editWebsiteUserInput.text)
+                                changed = true
                             }
-                            if(loginPassWord !== websitePassInput.text) {
-
+                            if(loginPassWord !== editWebsitePassInput.text) {
+                                DATABASE.updateField(currentItem, "website", editWebsiteInput.text, "password", editWebsitePassInput.text)
+                                changed = true
+                            }
+                            if(changed == true) {
+                                DATABASE.updateWebsite(currentItem, editWebsiteInput.text, editWebsiteUserInput.text, editWebsitePassInput.text)
                             }
 
                             website.parent.visible = false
                             focusBackground.visible = false
                             rootWindow.isFocused = true
                             missingFieldRect.visible = false
+
+                            textInputBackground.border.color = "transparent"
+                            userInputBackground.border.color = "transparent"
+                            passInputBackground.border.color = "transparent"
+
+                            editable = false
+                            hidden = true
                         }
                     }
                     else
@@ -577,19 +650,100 @@ Item {
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
                 onClicked: {
-                    websiteInput.text = ""
-                    websiteUserInput.text = ""
-                    websitePassInput.text = ""
+                    editWebsiteInput.text = ""
+                    editWebsiteUserInput.text = ""
+                    editWebsitePassInput.text = ""
+
+                    textInputBackground.border.color = "transparent"
+                    userInputBackground.border.color = "transparent"
+                    passInputBackground.border.color = "transparent"
+
                     website.parent.visible = false
                     focusBackground.visible = false
                     rootWindow.isFocused = true
 
-                    textInputBackground.border.color = "#969696"
-                    userInputBackground.border.color = "#969696"
-                    passInputBackground.border.color = "#969696"
                     missingFieldRect.visible = false
+                    editable = false
+                    hidden = true
                 }
             }
         }
+
+        Rectangle {
+            id: deleteButtonRect
+
+            height: parent.height * .15
+            width: parent.width * .2
+            radius: 10
+            color: "#FF0000"
+
+            anchors {
+                left: parent.left
+                bottom: websiteFrame.bottom
+
+                leftMargin: parent.width * 0.02
+                bottomMargin: parent.height * 0.02
+            }
+
+            Button {
+                id: deleteWebsite
+                anchors.fill: parent
+                //enabled: isFocused
+
+                text: "Delete"
+                font.pixelSize: 25
+                font.bold: true
+                flat: true
+
+                contentItem: Text {
+                    anchors.centerIn: parent
+                    text: deleteWebsite.text
+                    font: deleteWebsite.font
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    color: "#FFFFFF"
+                }
+
+                HoverHandler { cursorShape: Qt.PointingHandCursor }
+
+                onClicked: {
+                    editWebsiteInput.text = ""
+                    editWebsiteUserInput.text = ""
+                    editWebsitePassInput.text = ""
+
+                    textInputBackground.border.color = "transparent"
+                    userInputBackground.border.color = "transparent"
+                    passInputBackground.border.color = "transparent"
+
+                    website.parent.visible = false
+                    focusBackground.visible = false
+                    rootWindow.isFocused = true
+
+                    savedModel.clear()
+                    DATABASE.deleteItem(currentItem, "website", "url", websiteName)
+
+                    missingFieldRect.visible = false
+                    editable = false
+                    hidden = true
+                }
+            }
+        }
+    }
+
+    function populateUI(_idx, _url, _user, _pass) {
+        console.log("EditWebsiteInfo: websiteLoaded", _url, _user, _pass)
+        currentItem = _idx
+
+        // Fill the fields
+        editable = true
+        editWebsiteInput.text = _url
+        editWebsiteUserInput.text = _user
+        editWebsitePassInput.text = _pass
+        editable = false
+
+        // Remember the original values if needed later
+        websiteName = _url
+        loginUserName = _user
+        loginPassWord = _pass
     }
 }

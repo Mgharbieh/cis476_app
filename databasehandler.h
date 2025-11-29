@@ -29,8 +29,8 @@ private:
     void loadSavedData();
 
 signals:
-    void itemLoaded(QString type, QString title, int idx);
-    void websiteLoaded(QString URL, QString User, QString Pass);
+    void itemLoaded(QString, QString, int);
+    void loadedWeb(int, QString, QString, QString);
 
     void weakPasswordFlagged(int idx);
     void expiryIssueFlagged(int idx);
@@ -45,12 +45,21 @@ public:
     void closeDatabase();
 
     Q_INVOKABLE void registerAccount(QString user, QString pass, QString q1, QString a1, QString q2, QString a2, QString q3, QString a3);
+
     Q_INVOKABLE void saveWebsite(QString url, QString user, QString pass);
     Q_INVOKABLE void saveCC(QString name, QString ccNum, QString ccv, QString expiryDate, QString zipCode);
     Q_INVOKABLE void saveIDCard(QString name, QString bday, QString gender, QString height, QString address);
     Q_INVOKABLE void saveNote(QString name, QString text);
 
+    Q_INVOKABLE void updateField(int index, QString type, QString title, QString field, QString newData);
+    Q_INVOKABLE void updateWebsite(int index, QString newURL, QString newUser, QString newPass);
+    Q_INVOKABLE void updateCC(int index, QString name, QString ccNum, QString ccv, QString expiryDate, QString zipCode);
+    Q_INVOKABLE void updateIDCard(int index, QString name, QString bday, QString gender, QString height, QString address);
+    Q_INVOKABLE void updateNote(int index, QString name, QString text);
+
     Q_INVOKABLE void loadWebsite(int index);
+
+    Q_INVOKABLE void deleteItem(int index, QString type, QString titleField, QString title);
 
     void reportWeakPassword(ISecret* secret);
     void reportExpiryIssue(ISecret* secret);
