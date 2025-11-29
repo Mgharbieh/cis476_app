@@ -42,6 +42,20 @@ Window {
         }
     }
 
+    Connections {
+        target: DATABASE
+
+        function onWeakPasswordFlagged(idx) {
+            console.log("QML: weakPasswordFlagged for index", idx)
+
+            if (idx >= 0 && idx < savedModel.count) {
+                var item = savedModel.get(idx)
+                console.log("QML: weak password for item:",
+                            item.title, "type:", item.type)
+            }
+        }
+    }
+
     LoginPage{
         id: loginPage
 

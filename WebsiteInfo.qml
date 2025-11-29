@@ -228,7 +228,42 @@ Item {
                 console.log("Input finished:", websitePassInput.text)
                 passInputBackground.border.color = "#969696"
             }
+
+            onTextChanged: {
+                    if (text.length === 0) {
+                        // user cleared the field → don't scream at them yet
+                        weakPasswordWarning.visible = false
+                    } else {
+                        weakPasswordWarning.visible = DATABASE.isWeakPassword(text)
+                    }
+                }
         }
+
+        Rectangle {
+            id: weakPasswordWarning
+            anchors {
+                top: websitePassInput.bottom
+                left: websitePassInput.left
+                right: websitePassInput.right
+                topMargin: 4
+            }
+            height: 30
+            radius: 4
+            color: "#30FF0000"      // translucent red
+            visible: false
+
+            Text {
+                anchors.fill: parent
+                text: "Weak password – use at least 8 chars with upper, lower, and digits."
+                color: "#FF0000"
+                font.pixelSize: 14
+                wrapMode: Text.WordWrap
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+        }
+
+
 
         Rectangle {
             id: showPassButton
@@ -438,6 +473,8 @@ Item {
                         focusBackground.visible = false
                         rootWindow.isFocused = true
                         missingFieldRect.visible = false
+                        weakPasswordWarning.visible = false
+
                     }
                     else
                     {
@@ -504,6 +541,9 @@ Item {
                     userInputBackground.border.color = "#969696"
                     passInputBackground.border.color = "#969696"
                     missingFieldRect.visible = false
+
+                    weakPasswordWarning.visible = false
+
                 }
             }
         }

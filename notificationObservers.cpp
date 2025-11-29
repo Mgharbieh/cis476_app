@@ -12,19 +12,31 @@ void WeakPasswordObserver::update(ISecret* subject){
 
     const QString password = website->getPassword();
 
+    qDebug() << "[WeakPasswordObserver] Checking website"
+             << website->getURL()
+             << "password:" << password;
+
     bool hasDigit = false;
+    bool hasUpper = false;
+    bool hasLower = false;
+
     for (QChar c : password) {
-             if (c.isDigit()){
-                 hasDigit = true;
-                 break;
-             }
-         }
+        if (c.isDigit())      hasDigit = true;
+        else if (c.isUpper()) hasUpper = true;
+        else if (c.isLower()) hasLower = true;
+    }
 
-    bool isWeak = password.length() < 8 || hasDigit == false;
+    bool isWeak = (password.length() < 8 ||
+                   !hasDigit || !hasUpper || !hasLower);
 
-         if(isWeak){
+    if (isWeak) {
+        qDebug() << "[WeakPasswordObserver] WEAK password detected for"
+                 << website->getURL();
         _handler->reportWeakPassword(subject);
-         }
+    } else {
+        qDebug() << "[WeakPasswordObserver] Password OK for"
+                 << website->getURL();
+    }
 }
 
 void ExpirationObserver::update(ISecret* subject)

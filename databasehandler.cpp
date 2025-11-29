@@ -240,10 +240,13 @@ void DatabaseHandler::loadWebsite(int index)
 void DatabaseHandler::reportWeakPassword(ISecret* secret)
 {
     auto it = std::find(vault.begin(), vault.end(), secret);
-    if (it == vault.end())
+    if (it == vault.end()){
+        qDebug() << "[DatabaseHandler] Weak password reported but secret not in vault";
         return;
+    }
 
     int idx = static_cast<int>(std::distance(vault.begin(), it));
+    qDebug() << "[DatabaseHandler] Emitting weakPasswordFlagged for index" << idx;
     emit weakPasswordFlagged(idx);
 }
 
@@ -264,6 +267,26 @@ void DatabaseHandler::updateWebsite(int index, QString newURL, QString newUser, 
     delete(temp);
     temp = new Website(newURL, newUser, newPass);
     vault[index] = temp;
+}
+
+bool DatabaseHandler::isWeakPassword(QString pass) const
+{
+    bool hasDigit = false;
+    bool hasUpper = false;
+    bool hasLower = false;
+
+    for (QChar c : pass) {
+        if (c.isDigit())      hasDigit = true;
+        else if (c.isUpper()) hasUpper = true;
+        else if (c.isLower()) hasLower = true;
+    }
+
+    if (pass.length() < 8)
+        return true;
+    if (!hasDigit || !hasUpper || !hasLower)
+        return true;
+
+    return false;
 }
 
 void DatabaseHandler::updateCC(int index, QString name, QString ccNum, QString ccv, QString expiryDate, QString zipCode)
