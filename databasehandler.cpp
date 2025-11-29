@@ -5,8 +5,8 @@ DatabaseHandler::DatabaseHandler(): _weakObserver(this), _expirationObserver(thi
 
 void DatabaseHandler::loadSavedData()
 {
+    vault.clear();
     QSqlQuery query;
-
     //Find a row where both the username and password matching
     query.prepare("SELECT * FROM vault_db "
                   "WHERE id = ? AND user_id = ?");
@@ -188,6 +188,35 @@ void DatabaseHandler::saveNote(QString name, QString text)
     query.exec();
 }
 
+void DatabaseHandler::updateField(int index, QString type, QString title, QString field, QString newData)
+{
+    QSqlQuery query;
+    if(type == "website")
+    {
+        query.prepare("UPDATE vault_db SET " + field + " = ? "
+                      "WHERE id = ? AND url = ?");
+        query.bindValue(0, newData);
+        query.bindValue(1, user_ID);
+        query.bindValue(2, title);
+    }
+    query.exec();
+}
+
+void DatabaseHandler::deleteItem(int index, QString type, QString titleField, QString title)
+{
+    QSqlQuery query;
+    query.prepare("DELETE FROM vault_db "
+                  "WHERE id = ? AND "
+                  "type = ? AND " +
+                  titleField + " = ?");
+    query.bindValue(0, user_ID);
+    query.bindValue(1, type);
+    query.bindValue(2, title);
+    query.exec();
+
+    loadSavedData();
+}
+
 void DatabaseHandler::loadWebsite(int index)
 {
     if (index < 0 || index >= static_cast<int>(vault.size()))
@@ -197,14 +226,15 @@ void DatabaseHandler::loadWebsite(int index)
     if (!website)
         return;
 
-    qDebug() << "Loading website at index" << index
-              << website->getURL()
-              << website->getUserName()
-              << website->getPassword();
+    QString URL = website->getURL();
+    QString User = website->getUserName();
+    QString Pass = website->getPassword();
 
-    emit websiteLoaded(website->getURL(),
-                       website->getUserName(),
-                       website->getPassword());
+    qDebug() << "Loading website at index" << index << URL<< User << Pass;
+
+    emit loadedWeb(index, URL, User, Pass);
+    //emit websiteLoaded(URL, User, Pass);
+    qDebug() << "Signal emitted";
 }
 
 void DatabaseHandler::reportWeakPassword(ISecret* secret)
@@ -225,4 +255,28 @@ void DatabaseHandler::reportExpiryIssue(ISecret* secret)
 
     int idx = static_cast<int>(std::distance(vault.begin(), it));
     emit expiryIssueFlagged(idx);
+}
+
+
+void DatabaseHandler::updateWebsite(int index, QString newURL, QString newUser, QString newPass)
+{
+    Website* temp = dynamic_cast<Website*>(vault[index]);
+    delete(temp);
+    temp = new Website(newURL, newUser, newPass);
+    vault[index] = temp;
+}
+
+void DatabaseHandler::updateCC(int index, QString name, QString ccNum, QString ccv, QString expiryDate, QString zipCode)
+{
+
+}
+
+void DatabaseHandler::updateIDCard(int index, QString name, QString bday, QString gender, QString height, QString address)
+{
+
+}
+
+void DatabaseHandler::updateNote(int index, QString name, QString text)
+{
+
 }

@@ -34,6 +34,12 @@ Window {
             }
             savedModel.append(newElem)
         }
+
+        function onLoadedWeb(idx, url, user, pass) {
+            console.log("Signal received in Main.qml")
+            console.log(url, user, pass)
+            editWebsiteObj.populateUI(idx, url, user, pass)
+        }
     }
 
     LoginPage{
@@ -399,7 +405,7 @@ Window {
         visible: false
         color: backgroundcolor
         radius: 20
-        z: 3
+        z: 4
 
         anchors {
             top: parent.top
@@ -420,7 +426,7 @@ Window {
         visible: false
         color: backgroundcolor
         radius: 20
-        z: 3
+        z: 4
 
         anchors {
             top: parent.top
@@ -441,7 +447,7 @@ Window {
         visible: false
         color: backgroundcolor
         radius: 20
-        z: 3
+        z: 4
 
         anchors {
             top: parent.top
@@ -462,7 +468,7 @@ Window {
         visible: false
         color: backgroundcolor
         radius: 20
-        z: 3
+        z: 4
 
         anchors {
             top: parent.top
@@ -483,7 +489,7 @@ Window {
         visible: false
         color: backgroundcolor
         radius: 20
-        z: 3
+        z: 4
 
         anchors {
             top: parent.top
@@ -604,7 +610,7 @@ Window {
             model: savedModel
 
             delegate: Item {
-                width: parent.width-2; height: 45
+                width: parent.width; height: 45
                 Rectangle {
                     anchors {
                         fill: parent
@@ -613,14 +619,12 @@ Window {
 
                     color: backgroundcolor
 
-
-
                     Text {
                         anchors {
                             left: parent.left
                             top: parent.top
-                            rightMargin: 5
-                            topMargin: 5
+                            leftMargin: 8
+                            topMargin: 2
                         }
 
                         text: title
@@ -631,7 +635,7 @@ Window {
                         anchors {
                             left: parent.left
                             bottom: parent.bottom
-                            rightMargin: 5
+                            leftMargin: 8
                             topMargin: 5
                         }
 
@@ -690,6 +694,7 @@ Window {
         if (type === "website") {
 
                // Ask C++ to emit websiteLoaded for this index
+               console.log("Loading data at index", idx)
                DATABASE.loadWebsite(idx)
 
                isFocused = false

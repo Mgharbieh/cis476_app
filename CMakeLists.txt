@@ -43,6 +43,7 @@ qt_add_qml_module(appcis476_app
         SessionManager.h
         SOURCES notificationObservers.h
         SOURCES notificationObservers.cpp
+        SOURCES copyhandler.h
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
