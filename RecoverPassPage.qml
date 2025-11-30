@@ -76,7 +76,7 @@ Item {
                     id: submitButton
                     text: "Submit Answer"
                     onClicked: { inactiveTimer.restart()
-                        var questionIndex = LOGIN.submitResponse(questionText.text, answerField.text)
+                        var questionIndex = LOGIN.submitSecurityAnswer(questionText.text, answerField.text)
                         if(questionIndex === currentQuestionIndex){
                             statusText.text = "Incorrect, try again"
                         }
