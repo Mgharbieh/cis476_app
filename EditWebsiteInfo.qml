@@ -19,9 +19,8 @@ Item {
 
     Timer {
         id: copyNotifTimer
-        interval: 10000
+        interval: 1250
         onTriggered: {
-            CLIPBOARD.clearClipboard();
             copyToClipboardRect.visible = false
         }
     }
@@ -153,6 +152,7 @@ Item {
                     CLIPBOARD.copyText(editWebsiteInput.text)
                     copyToClipboardRect.visible = true
                     copyNotifTimer.start()
+                    clearClipboardTimer.restart()
                 }
             }
 
@@ -265,6 +265,7 @@ Item {
                     CLIPBOARD.copyText(editWebsiteUserInput.text)
                     copyToClipboardRect.visible = true
                     copyNotifTimer.start()
+                    clearClipboardTimer.restart()
                 }
             }
 
@@ -427,6 +428,7 @@ Item {
                     CLIPBOARD.copyText(editWebsitePassInput.text)
                     copyToClipboardRect.visible = true
                     copyNotifTimer.start()
+                    clearClipboardTimer.restart()
                 }
             }
 

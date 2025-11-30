@@ -25,9 +25,17 @@ Window {
 
     Timer {
         id: inactiveTimer
-        interval: 10000
+        interval: 120000
         onTriggered: {
             LOGIN.logout()
+        }
+    }
+
+    Timer {
+        id: clearClipboardTimer
+        interval: 5000
+        onTriggered: {
+            CLIPBOARD.clearClipboard();
         }
     }
 
