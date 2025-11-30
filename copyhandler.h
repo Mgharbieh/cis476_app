@@ -20,6 +20,10 @@ public:
         clipBoard->clear();
         clipBoard->setText(txt);
     }
+
+    Q_INVOKABLE void clearClipboard(){
+        clipBoard->clear();
+    }
 };
 
 #endif // COPYHANDLER_H

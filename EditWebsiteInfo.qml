@@ -19,8 +19,11 @@ Item {
 
     Timer {
         id: copyNotifTimer
-        interval: 1250
-        onTriggered: copyToClipboardRect.visible = false
+        interval: 10000
+        onTriggered: {
+            CLIPBOARD.clearClipboard();
+            copyToClipboardRect.visible = false
+        }
     }
 
     Rectangle {
