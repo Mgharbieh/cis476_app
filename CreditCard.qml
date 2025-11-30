@@ -454,7 +454,7 @@ Item {
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     var incomplete = false
                     if(holderNameInput.text == "")
                     {
@@ -542,7 +542,7 @@ Item {
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     rootWindow.creditCardWindow.visible = false;
                     rootWindow.backgroundRect.visible = false;
                     rootWindow.isFocused = true;
@@ -596,7 +596,7 @@ Item {
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     // validate inputs, then save
                     DATABASE.saveCC(holderNameInput.text, ccNumInput.text, cvvInput.text, expiryDateInput.text, zipCodeInput.text)
 
@@ -639,7 +639,7 @@ Item {
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     rootWindow.creditCardWindow.visible = false;
                     rootWindow.backgroundRect.visible = false;
                     rootWindow.isFocused = true;

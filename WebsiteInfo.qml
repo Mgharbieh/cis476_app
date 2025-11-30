@@ -309,7 +309,7 @@ Item {
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                    if(showHide.text === "show") {
                        showHide.text = "hide"
                        websitePassInput.echoMode = "Normal"
@@ -366,7 +366,7 @@ Item {
                     cursorShape: Qt.PointingHandCursor
                 }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     websitePassInput.text = PASSBUILDER.build(10) //10 chars long, can be changed
                     passInputBackground.border.color = "#969696"
                 }
@@ -447,7 +447,7 @@ Item {
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     var incomplete = false
                     if(websiteInput.text == "")
                     {
@@ -529,7 +529,7 @@ Item {
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     websiteInput.text = ""
                     websiteUserInput.text = ""
                     websitePassInput.text = ""

@@ -458,7 +458,7 @@ Item {
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     var incomplete = false
                     if(holderNameInput.text == "")
                     {
@@ -540,7 +540,7 @@ Item {
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     //websiteInput.text = ""
                     //websiteUserInput.text = ""
                    //websitePassInput.text = ""

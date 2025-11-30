@@ -164,7 +164,7 @@ Item {
 
                 Button {
                     text: "Back to Login"
-                    onClicked: {
+                    onClicked: { inactiveTimer.restart()
                         //tell Main.qml to swap screens
                         registerScreen.backToLoginRequested()
                     }
@@ -172,7 +172,7 @@ Item {
 
                 Button {
                     text: "Register"
-                    onClicked: {
+                    onClicked: { inactiveTimer.restart()
                         //add validation here.
 
                         if(masterPasswordText === confirmPasswordText) {

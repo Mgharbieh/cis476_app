@@ -418,7 +418,7 @@ Item {
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     // validate inputs, then save
                 }
             }
@@ -449,7 +449,7 @@ Item {
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     rootWindow.idCardWindow.visible = false;
                     rootWindow.backgroundRect.visible = false;
                     rootWindow.isFocused = true;

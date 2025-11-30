@@ -249,7 +249,7 @@ Item {
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     // ADD SAVE FUNCTIONALITY HERE ONCE DATABASE IS IMPLEMENTED //
                     var incomplete = false
                     if(secureNoteName.text == "")
@@ -317,7 +317,7 @@ Item {
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     noteContent.text = ""
                     secureNoteName.text = ""
                     note.parent.visible = false

@@ -23,6 +23,14 @@ Window {
 
     color: backgroundcolor
 
+    Timer {
+        id: inactiveTimer
+        interval: 10000
+        onTriggered: {
+            LOGIN.logout()
+        }
+    }
+
     Connections {
         target: DATABASE
 
@@ -230,7 +238,7 @@ Window {
 
                     HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                    onClicked: {
+                    onClicked: { inactiveTimer.restart()
                         isFocused = false
                         backgroundRect.visible = true
                         websiteGUIFrame.visible = true
@@ -273,7 +281,7 @@ Window {
 
                     HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                    onClicked: {
+                    onClicked: { inactiveTimer.restart()
                         isFocused = false
                         backgroundRect.visible = true
                         creditCardGUIFrame.visible = true
@@ -315,7 +323,7 @@ Window {
                     }
 
                     HoverHandler { cursorShape: Qt.PointingHandCursor }
-                    onClicked: {
+                    onClicked: { inactiveTimer.restart()
                         isFocused = false
                         backgroundRect.visible = true
                         idCardGUIFrame.visible = true
@@ -358,7 +366,7 @@ Window {
 
                     HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                    onClicked: {
+                    onClicked: { inactiveTimer.restart()
                         isFocused = false
                         backgroundRect.visible = true
                         noteGUIFrame.visible = true
@@ -401,7 +409,7 @@ Window {
 
                     HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                    onClicked: {LOGIN.logout()}
+                    onClicked: { inactiveTimer.restart();LOGIN.logout()}
                 }
             }
         }
@@ -695,7 +703,7 @@ Window {
 
                         HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                        onClicked: {
+                        onClicked: { inactiveTimer.restart()
                             viewSavedData(type, title, index)
                         }
                     }

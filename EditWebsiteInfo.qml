@@ -149,7 +149,7 @@ Item {
                     border.color: "transparent"
                 }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     CLIPBOARD.copyText(editWebsiteInput.text)
                     copyToClipboardRect.visible = true
                     copyNotifTimer.start()
@@ -261,7 +261,7 @@ Item {
                     border.color: "transparent"
                 }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     CLIPBOARD.copyText(editWebsiteUserInput.text)
                     copyToClipboardRect.visible = true
                     copyNotifTimer.start()
@@ -389,7 +389,7 @@ Item {
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                    hidden = !hidden
                 }
             }
@@ -423,7 +423,7 @@ Item {
                     border.color: "transparent"
                 }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     CLIPBOARD.copyText(editWebsitePassInput.text)
                     copyToClipboardRect.visible = true
                     copyNotifTimer.start()
@@ -544,20 +544,20 @@ Item {
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     // ADD SAVE FUNCTIONALITY HERE ONCE DATABASE IS IMPLEMENTED //
                     var incomplete = false
-                    if(editWebsiteInput.text == "")
+                    if(editWebsiteInput.text === "")
                     {
                         textInputBackground.border.color = "#FF0000"
                         incomplete = true
                     }
-                    if(editWebsiteUserInput.text == "")
+                    if(editWebsiteUserInput.text === "")
                     {
                         userInputBackground.border.color = "#FF0000"
                         incomplete = true
                     }
-                    if(editWebsitePassInput.text == "")
+                    if(editWebsitePassInput.text === "")
                     {
                         passInputBackground.border.color = "#FF0000"
                         incomplete = true
@@ -652,7 +652,7 @@ Item {
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     editWebsiteInput.text = ""
                     editWebsiteUserInput.text = ""
                     editWebsitePassInput.text = ""
@@ -709,7 +709,7 @@ Item {
 
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                onClicked: {
+                onClicked: { inactiveTimer.restart()
                     editWebsiteInput.text = ""
                     editWebsiteUserInput.text = ""
                     editWebsitePassInput.text = ""

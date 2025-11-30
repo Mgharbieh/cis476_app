@@ -210,7 +210,7 @@ Item {
                     cursorShape: Qt.PointingHandCursor
                }
 
-               onClicked: { 
+               onClicked: {
                    if(LOGIN.accountExists(userName)){
                               loginScreen.recoverAccountClicked()
                               recover.text = "Recover Master Password?"
@@ -283,7 +283,8 @@ Item {
                onClicked: {
                    var success = LOGIN.tryLogin(userName, passWord)
                    console.log(success)
-                   if(success == true) {
+                   if(success === true) {
+                       inactiveTimer.restart()
                        loginScreen.visible = false
                        usernameInput.text = ""
                        passwordInput.text = ""
