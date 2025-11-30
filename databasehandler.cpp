@@ -35,7 +35,19 @@ void DatabaseHandler::loadSavedData()
         }
         else if(type == "credit card")
         {
+            QString name = query.value("name").toString();
+            QString ccNum = query.value("credit_num").toString();
+            QString ccv = query.value("credit_cvv").toString();
+            QString expDate = query.value("expiration").toString();
+            QString zipCode = query.value("zip_code").toString();
 
+
+            CreditCard* cc = new CreditCard(name, ccNum, expDate, ccv, zipCode);
+            vault.push_back(cc);
+            int idx = static_cast<int>(vault.size() - 1);
+            QString cardTitle = "●●●●-●●●●-●●●●-" + ccNum.right(4);
+
+            emit itemLoaded("credit card", cardTitle, idx);
         }
         else if(type == "ID card")
         {
@@ -157,6 +169,15 @@ void DatabaseHandler::saveCC(QString name, QString ccNum, QString ccv, QString e
     query.bindValue(6, expiryDate);
     query.bindValue(7, zipCode);
     query.exec();
+
+    CreditCard* cc = new CreditCard(name, ccNum, expiryDate, ccv, zipCode);
+    vault.push_back(cc);
+    int idx = static_cast<int>(vault.size() - 1);
+
+    QString cardTitle = "●●●●-●●●●-●●●●-" + ccNum.right(4);
+
+    // Notify QML that a new item exists
+    emit itemLoaded("credit card", cardTitle, idx);
 }
 
 void DatabaseHandler::saveIDCard(QString name, QString bday, QString gender, QString height, QString address)
@@ -235,6 +256,24 @@ void DatabaseHandler::loadWebsite(int index)
     emit loadedWeb(index, URL, User, Pass);
     //emit websiteLoaded(URL, User, Pass);
     qDebug() << "Signal emitted";
+}
+
+void DatabaseHandler::loadCC(int index)
+{
+    if (index < 0 || index >= static_cast<int>(vault.size()))
+        return;
+
+    CreditCard* cc = dynamic_cast<CreditCard*>(vault[index]);
+    if (!cc)
+        return;
+
+    QString name = cc->getName();
+    QString ccNum = cc->getCardNum();
+    QString ccv = cc->getCcv();
+    QString expDate = cc->getExpDate();
+    QString zipCode = cc->getZipCode();
+
+    emit loadCCSignal(index, name, ccNum, ccv, expDate, zipCode);
 }
 
 void DatabaseHandler::reportWeakPassword(ISecret* secret)

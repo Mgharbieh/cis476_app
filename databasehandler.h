@@ -31,6 +31,7 @@ private:
 signals:
     void itemLoaded(QString, QString, int);
     void loadedWeb(int, QString, QString, QString);
+    void loadCCSignal(int, QString, QString, QString, QString, QString);
 
     void weakPasswordFlagged(int idx);
     void expiryIssueFlagged(int idx);
@@ -56,8 +57,11 @@ public:
     Q_INVOKABLE void updateCC(int index, QString name, QString ccNum, QString ccv, QString expiryDate, QString zipCode);
     Q_INVOKABLE void updateIDCard(int index, QString name, QString bday, QString gender, QString height, QString address);
     Q_INVOKABLE void updateNote(int index, QString name, QString text);
+
     Q_INVOKABLE bool isWeakPassword(QString pass) const;
+
     Q_INVOKABLE void loadWebsite(int index);
+    Q_INVOKABLE void loadCC(int index);
 
     Q_INVOKABLE void deleteItem(int index, QString type, QString titleField, QString title);
 

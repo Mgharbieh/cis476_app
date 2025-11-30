@@ -4,11 +4,12 @@ import QtQuick
 import QtQuick.Controls
 
 Item {
-    property int ccNum: 0
+    property string ccNum: ""
     property string expiryDate: ""
     property string ccHolderName: ""
-    property int cvv: 0
-    property int zipCode: 0
+    property string cvv: ""
+    property string zipCode: ""
+    property int currentItem: -1
 
     id: creditCard
 
@@ -41,6 +42,9 @@ Item {
         id: creditCardFrame
         visible: true
         color: "transparent"
+
+        //height: 500
+        //width: 300
 
         anchors {
             top: titleText.bottom
@@ -484,18 +488,12 @@ Item {
 
                     if(incomplete == false)
                     {
-                        DATABASE.saveCC(holderNameInput.text, ccNumInput.text, cvvInput.text, expiryDateInput.text, zipCodeInput.text)
-
                         creditCard.parent.visible = false
                         focusBackground.visible = false
                         rootWindow.isFocused = true
                         missingFieldRect.visible = false
+                        //weakPasswordWarning.visible = false
 
-                        holderNameInput.text = ""
-                        ccNumInput.text = ""
-                        expiryDateInput.text = ""
-                        cvvInput.text = ""
-                        zipCodeInput.text = ""
                     }
                     else
                     {
@@ -543,115 +541,31 @@ Item {
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
                 onClicked: {
-                    rootWindow.creditCardWindow.visible = false;
-                    rootWindow.backgroundRect.visible = false;
-                    rootWindow.isFocused = true;
-
-                    holderNameInput.text = ""
-                    ccNumInput.text = ""
-                    expiryDateInput.text = ""
-                    cvvInput.text = ""
-                    zipCodeInput.text = ""
-                }
-            }
-        }
-
-
-        /*
-        Row {
-            id: buttonRow
-
-            anchors {
-                top: zipCodeRect.bottom
-                left: parent.left
-                topMargin: 20
-                leftMargin: 10
-            }
-
-            spacing: 10
-
-            Button {
-                id: saveButton
-                text: "Save"
-                font.pixelSize: 25
-                flat: true
-                width: 75
-                height: 40
-
-                background: Rectangle {
-                    radius: 15
-                    border.color: rootWindow.accent1color
-                    border.width: 1
-                    color: "transparent"
-                }
-
-                contentItem: Text {
-                    text: saveButton.text
-                    font: saveButton.font
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    color: rootWindow.textColor
-                    anchors.centerIn: parent
-                }
-
-                HoverHandler { cursorShape: Qt.PointingHandCursor }
-
-                onClicked: {
-                    // validate inputs, then save
-                    DATABASE.saveCC(holderNameInput.text, ccNumInput.text, cvvInput.text, expiryDateInput.text, zipCodeInput.text)
-
+                    //websiteInput.text = ""
+                    //websiteUserInput.text = ""
+                   //websitePassInput.text = ""
                     creditCard.parent.visible = false
                     focusBackground.visible = false
                     rootWindow.isFocused = true
+
+                    //textInputBackground.border.color = "#969696"
+                    //userInputBackground.border.color = "#969696"
+                    //passInputBackground.border.color = "#969696"
                     missingFieldRect.visible = false
 
-                    holderNameInput.text = ""
-                    ccNumInput.text = ""
-                    expiryDateInput.text = ""
-                    cvvInput.text = ""
-                    zipCodeInput.text = ""
-                }
-            }
-
-            Button {
-                id: cancelButton
-                text: "Cancel"
-                font.pixelSize: 25
-                flat: true
-                width: 75
-                height: 40
-
-                background: Rectangle {
-                    radius: 15
-                    border.color: rootWindow.accent1color
-                    border.width: 1
-                    color: "transparent"
-                }
-
-                contentItem: Text {
-                    text: cancelButton.text
-                    font: cancelButton.font
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    color: rootWindow.textColor
-                    anchors.centerIn: parent
-                }
-
-                HoverHandler { cursorShape: Qt.PointingHandCursor }
-
-                onClicked: {
-                    rootWindow.creditCardWindow.visible = false;
-                    rootWindow.backgroundRect.visible = false;
-                    rootWindow.isFocused = true;
-
-                    holderNameInput.text = ""
-                    ccNumInput.text = ""
-                    expiryDateInput.text = ""
-                    cvvInput.text = ""
-                    zipCodeInput.text = ""
+                   //weakPasswordWarning.visible = false
                 }
             }
         }
-        */
+    }
+
+    function populateUI(_idx, _name, _ccNum, _ccv, _exp, _zip) {
+        currentItem = _idx
+
+        holderNameInput.text = _name
+        ccNumInput.text = _ccNum
+        expiryDateInput.text = _exp
+        cvvInput.text = _ccv
+        zipCodeInput.text = _zip
     }
 }

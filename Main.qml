@@ -40,6 +40,10 @@ Window {
             console.log(url, user, pass)
             editWebsiteObj.populateUI(idx, url, user, pass)
         }
+
+        function onLoadCCSignal(idx, name, ccNum, ccv, exp, zip) {
+            editCCObj.populateUI(idx, name, ccNum, ccv, exp, zip)
+        }
     }
 
     Connections {
@@ -70,7 +74,6 @@ Window {
             recoverPassPage.visible = true
         }
     }
-
 
     RegisterUser{
         id: registerPage
@@ -519,6 +522,26 @@ Window {
         }
     }
 
+    Rectangle {
+        id: editCCGUIFrame
+        visible: false
+        color: backgroundcolor
+        radius: 20
+        z: 4
+
+        anchors {
+            top: parent.top
+            left:parent.left
+            right: parent.right
+            bottom: parent.bottom
+            margins: 100
+        }
+
+        EditCreditCard {
+            id: editCCObj
+            anchors.fill: parent
+        }
+    }
 
     Switch {
         id: lightDarkMode
@@ -706,7 +729,6 @@ Window {
 
     function viewSavedData(type, title, idx) {
         if (type === "website") {
-
                // Ask C++ to emit websiteLoaded for this index
                console.log("Loading data at index", idx)
                DATABASE.loadWebsite(idx)
@@ -715,12 +737,14 @@ Window {
                backgroundRect.visible = true
                editWebsiteGUIFrame.visible = true
         }
+        else if (type === "credit card") {
+            console.log("Loading data at index", idx)
+            DATABASE.loadCC(idx)
 
-        //isFocused = false
-        //backgroundRect.visible = true
-        //editWebsiteGUIFrame.visible = true
-
-
+            isFocused = false
+            backgroundRect.visible = true
+            editCCGUIFrame.visible = true
+        }
     }
 }
 
