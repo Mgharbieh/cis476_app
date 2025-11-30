@@ -66,10 +66,14 @@ Item {
 
                 Button {
                     text: "Back to Login"
-                    onClicked: recoverScreen.backToLoginRequested()
+                    onClicked: {
+                        submitButton.enabled = true
+                        recoverScreen.backToLoginRequested()
+                    }
                 }
 
                 Button {
+                    id: submitButton
                     text: "Submit Answer"
                     onClicked: { inactiveTimer.restart()
                         var questionIndex = LOGIN.submitResponse(questionText.text, answerField.text)
@@ -78,12 +82,15 @@ Item {
                         }
                         else{
                             statusText.text = ""
+                            answerField.text = ""
                         }
                         currentQuestionIndex = questionIndex
 
                         questionText.text = LOGIN.getQuestion(questionIndex)
                         if(questionIndex >= numSecurityQuestions){
+                            currentQuestionIndex = 0
                             questionText.text = "MASTER PASSWORD: " + LOGIN.getPassword()
+                            submitButton.enabled = false
                         }
                     }
                 }

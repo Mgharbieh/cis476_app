@@ -124,7 +124,8 @@ public:
     }
 
     Q_INVOKABLE int submitResponse(QString question, QString response){
-        bool result = account->handler.handleRequest(question, response);
+        if(questionIndex >= 3) questionIndex = 0;
+        bool result = account->handler->handleRequest(question, response);
         if(result){
             questionIndex++;
         }
