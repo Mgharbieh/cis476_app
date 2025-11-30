@@ -76,6 +76,20 @@ Window {
         }
     }
 
+    Connections {
+        target: DATABASE
+
+        function onExpiryIssueFlagged(idx) {
+            console.log("QML: expiryIssueFlagged for index", idx)
+
+            if (idx >= 0 && idx < savedModel.count) {
+                var item = savedModel.get(idx)
+                console.log("QML: expired card for item:",
+                            item.title, "type:", item.type)
+            }
+        }
+    }
+
     LoginPage{
         id: loginPage
 

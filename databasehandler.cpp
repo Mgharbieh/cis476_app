@@ -45,6 +45,11 @@ void DatabaseHandler::loadSavedData()
             CreditCard* cc = new CreditCard(name, ccNum, expDate, ccv, zipCode);
             vault.push_back(cc);
             int idx = static_cast<int>(vault.size() - 1);
+
+            cc->registerObserver(&_expirationObserver);
+
+            cc->notifyObservers();
+
             QString cardTitle = "●●●●-●●●●-●●●●-" + ccNum.right(4);
 
             emit itemLoaded("credit card", cardTitle, idx);
@@ -173,6 +178,9 @@ void DatabaseHandler::saveCC(QString name, QString ccNum, QString ccv, QString e
     CreditCard* cc = new CreditCard(name, ccNum, expiryDate, ccv, zipCode);
     vault.push_back(cc);
     int idx = static_cast<int>(vault.size() - 1);
+
+    cc->registerObserver(&_expirationObserver);
+    cc->notifyObservers();
 
     QString cardTitle = "●●●●-●●●●-●●●●-" + ccNum.right(4);
 
@@ -326,9 +334,47 @@ bool DatabaseHandler::isWeakPassword(QString pass) const
     return false;
 }
 
-void DatabaseHandler::updateCC(int index, QString name, QString ccNum, QString ccv, QString expiryDate, QString zipCode)
+void DatabaseHandler::updateCC(int index, QString name, QString ccNum, QString expiryDate, QString ccv, QString zipCode)
 {
+    CreditCard* temp = dynamic_cast<CreditCard*>(vault[index]);
+    delete(temp);
+    temp = new CreditCard(name,ccNum, expiryDate, ccv, zipCode);
+    vault[index] = temp;
 
+    temp->registerObserver(&_expirationObserver);
+
+    temp->notifyObservers();
+}
+
+bool DatabaseHandler::isExpired(QString exp) const
+{
+    QStringList parts = exp.split('/');
+
+    if (parts.count() != 2) {
+        qDebug() << "Error: Invalid input format, expected mm/yy.";
+        return true; // Treat invalid input as expired/problematic
+    }
+
+    int month = parts[0].toInt();
+    int twoDigitYear = parts[1].toInt();
+
+    int fullYear = 2000 + twoDigitYear;
+
+    QDate expirationDate(fullYear, month, 1);
+
+    if (!expirationDate.isValid()) {
+        qDebug() << "Error: Invalid month/year combination:" << exp;
+        return true;
+    }
+
+    QDate today = QDate::currentDate();
+
+    if(expirationDate < today){
+        return true; // Date is expired
+    }
+    else{
+        return false; // Not expired
+    }
 }
 
 void DatabaseHandler::updateIDCard(int index, QString name, QString bday, QString gender, QString height, QString address)

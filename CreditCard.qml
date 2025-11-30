@@ -248,13 +248,49 @@ Item {
                 }
 
                 previousLength = text.length;
+                if (text.length === 0) {
+                    ccExpiryWarning.visible = false;
+                }
+                else {
+                    ccExpiryWarning.visible = DATABASE.isExpired(text);
+                }
+
             }
 
             onEditingFinished: {
                 //debugging
                 console.log("Input finished:", expiryDateInput.text)
             }
+
         }
+
+        Rectangle {
+            id: ccExpiryWarning
+            anchors {
+                left: expiryDateInput.right
+                verticalCenter: expiryDateInput.verticalCenter
+
+                topMargin: 8
+            }
+
+            width: 250
+            height: 40
+            radius: 4
+            color: "#30FF0000"
+            visible: false
+
+            Text {
+                anchors.fill: parent
+                text: "This credit card appears to be expired or invalid (mm/yy)."
+                color: "#FF0000"
+                font.pixelSize: 14
+                wrapMode: Text.WordWrap
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+        }
+
+
 
         Rectangle {
             id: cvvRect
@@ -501,6 +537,8 @@ Item {
                     {
                         missingFieldRect.visible = true
                     }
+                    ccExpiryWarning.visible = false;
+
                 }
             }
         }
@@ -552,6 +590,8 @@ Item {
                     expiryDateInput.text = ""
                     cvvInput.text = ""
                     zipCodeInput.text = ""
+                    ccExpiryWarning.visible = false;
+
                 }
             }
         }
