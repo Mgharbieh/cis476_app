@@ -14,7 +14,7 @@ class Account : public QObject, public IObserver {
 
 public:
 
-    SecurityQuestionHandler handler;
+    SecurityQuestionHandler* handler;
     std::vector<QString> questions;
 
     void update(ISecret* subject) override{}
@@ -40,7 +40,7 @@ public:
         questions.push_back(q2);
         questions.push_back(q3);
 
-        this->handler = *handlers[0];
+        this->handler = handlers[0];
 
         this->username = username;
         this->masterPassword.setPass(password);
