@@ -16,18 +16,15 @@ void WeakPasswordObserver::update(ISecret* subject){
              << website->getURL()
              << "password:" << password;
 
-    bool hasDigit = false;
     bool hasUpper = false;
     bool hasLower = false;
 
     for (QChar c : password) {
-        if (c.isDigit())      hasDigit = true;
-        else if (c.isUpper()) hasUpper = true;
+        if (c.isUpper()) hasUpper = true;
         else if (c.isLower()) hasLower = true;
     }
 
-    bool isWeak = (password.length() < 8 ||
-                   !hasDigit || !hasUpper || !hasLower);
+    bool isWeak = (password.length() < 8 || !hasUpper || !hasLower);
 
     if (isWeak) {
         qDebug() << "[WeakPasswordObserver] WEAK password detected for"

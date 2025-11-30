@@ -30,7 +30,13 @@ CreditCard::CreditCard(QString name, QString cardNum, QString expDate, QString c
     this->zipCode = zipCode;
 }
 
-void CreditCard::notifyObservers() {};
+void CreditCard::notifyObservers(){
+    for (auto* obs : observers_){
+        if(obs){
+            obs->update(this);
+        }
+    }
+}
 
 QString CreditCard::getCardNum() const { return cardNum; }
 QString CreditCard::getExpDate() const { return expDate; }
@@ -49,7 +55,13 @@ IDCard::IDCard(QString name, QString birthday, QString gender, QString height, Q
     this->address = address;
 }
 
-void IDCard::notifyObservers() {};
+void IDCard::notifyObservers() {
+    for (auto* obs : observers_){
+        if(obs){
+            obs->update(this);
+        }
+    }
+};
 
 QString IDCard::getName() const { return name; }
 QString IDCard::getBirthday() const { return birthday; }
@@ -66,7 +78,13 @@ SecureNote::SecureNote(QString noteName, QString noteContent)
     this->noteContent = noteContent;
 }
 
-void SecureNote::notifyObservers() {};
+void SecureNote::notifyObservers() {
+    for (auto* obs : observers_){
+        if(obs){
+            obs->update(this);
+        }
+    }
+};
 
 QString SecureNote::getNoteName() const { return noteName; }
 QString SecureNote::getNoteContent() const { return noteContent; }

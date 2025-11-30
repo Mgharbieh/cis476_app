@@ -310,19 +310,17 @@ void DatabaseHandler::updateWebsite(int index, QString newURL, QString newUser, 
 
 bool DatabaseHandler::isWeakPassword(QString pass) const
 {
-    bool hasDigit = false;
     bool hasUpper = false;
     bool hasLower = false;
 
     for (QChar c : pass) {
-        if (c.isDigit())      hasDigit = true;
-        else if (c.isUpper()) hasUpper = true;
+        if (c.isUpper()) hasUpper = true;
         else if (c.isLower()) hasLower = true;
     }
 
     if (pass.length() < 8)
         return true;
-    if (!hasDigit || !hasUpper || !hasLower)
+    if (!hasUpper || !hasLower)
         return true;
 
     return false;
