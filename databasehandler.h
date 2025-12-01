@@ -61,6 +61,8 @@ public:
     Q_INVOKABLE void updateNote(int index, QString name, QString text);
 
     Q_INVOKABLE bool isWeakPassword(QString pass) const;
+    Q_INVOKABLE bool isExpired(QString exp) const;
+
 
     Q_INVOKABLE void loadWebsite(int index);
     Q_INVOKABLE void loadCC(int index);

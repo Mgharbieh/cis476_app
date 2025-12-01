@@ -1,4 +1,5 @@
 #include "Secret.h"
+#include <QDate>
 //TODO: Implement all secrets here
 
 Website::Website(QString url, QString username, QString password){
@@ -36,6 +37,42 @@ void CreditCard::notifyObservers(){
             obs->update(this);
         }
     }
+}
+
+bool CreditCard::isExpired(){
+
+    QString exp = this->expDate;
+
+    // Split the string into Month and Year parts (e.g., "12/30" -> "12" and "30")
+    QStringList parts = exp.split('/');
+
+    if (parts.count() != 2) {
+        qDebug() << "Error: Invalid input format, expected mm/yy.";
+        return true; // Treat invalid input as expired/problematic
+    }
+
+    int month = parts[0].toInt();
+    int twoDigitYear = parts[1].toInt();
+
+    int fullYear = 2000 + twoDigitYear;
+
+    QDate expirationDate(fullYear, month, 1);
+
+    if (!expirationDate.isValid()) {
+        qDebug() << "Error: Invalid month/year combination:" << exp;
+        return true;
+    }
+
+    // Compare the expiration date with today's date
+    QDate today = QDate::currentDate();
+
+    if(expirationDate < today){
+        return true; // Date is expired
+    }
+    else{
+        return false; // Not expired
+    }
+
 }
 
 QString CreditCard::getCardNum() const { return cardNum; }

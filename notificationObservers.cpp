@@ -38,16 +38,18 @@ void WeakPasswordObserver::update(ISecret* subject){
 
 void ExpirationObserver::update(ISecret* subject)
 {
-    if (!_handler)
-        return;
 
-    // handle CreditCard, IDCard, etc.
-    // e.g., dynamic_cast<CreditCard*>(subject) and check expiration.
+    CreditCard* creditcard = dynamic_cast<CreditCard*>(subject);
+    if( !_handler || !creditcard){return;}
 
-    // Example pseudo-code:
-    // if (auto* card = dynamic_cast<CreditCard*>(subject)) {
-    //     if (card->isExpired()) {
-    //         m_handler->reportExpiryIssue(subject);
-    //     }
-    // }
+    if(creditcard->isExpired()){
+        qDebug() << "[ExpirationObserver] expired date found"
+                 << creditcard->getExpDate();
+
+        _handler->reportExpiryIssue(subject);
+    }
+    else{
+        qDebug() << "[ExpirationObserver] Card is not expired"
+                 << creditcard->getExpDate();
+    }
 }

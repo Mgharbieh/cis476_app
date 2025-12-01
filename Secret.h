@@ -55,6 +55,7 @@ private:
 public:
     CreditCard(QString name, QString cardNum, QString expDate, QString ccv, QString zipCode);
     void notifyObservers() override;
+    bool isExpired();
 
     QString getName() const;
     QString getCardNum() const;
