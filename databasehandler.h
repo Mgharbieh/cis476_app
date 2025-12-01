@@ -32,6 +32,8 @@ signals:
     void itemLoaded(QString, QString, int);
     void loadedWeb(int, QString, QString, QString);
     void loadCCSignal(int, QString, QString, QString, QString, QString);
+    void loadIDSignal(int, QString, QString, QString, QString, QString);
+    void loadNoteSignal(int, QString, QString);
 
     void weakPasswordFlagged(int idx);
     void expiryIssueFlagged(int idx);
@@ -62,6 +64,8 @@ public:
 
     Q_INVOKABLE void loadWebsite(int index);
     Q_INVOKABLE void loadCC(int index);
+    Q_INVOKABLE void loadID(int index);
+    Q_INVOKABLE void loadNote(int index);
 
     Q_INVOKABLE void deleteItem(int index, QString type, QString titleField, QString title);
 

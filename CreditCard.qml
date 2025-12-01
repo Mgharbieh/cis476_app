@@ -4,11 +4,11 @@ import QtQuick
 import QtQuick.Controls
 
 Item {
-    property int ccNum: 0
+    property string ccNum: ""
     property string expiryDate: ""
     property string ccHolderName: ""
-    property int cvv: 0
-    property int zipCode: 0
+    property string cvv: ""
+    property string zipCode: ""
 
     id: creditCard
 
@@ -83,7 +83,9 @@ Item {
             anchors {
                 top: parent.top
                 left: holderNameRect.right
-                right: holderNameInput.right
+                right: ccNumInput.right
+
+                topMargin: 5
             }
 
             echoMode: "Normal"
@@ -102,8 +104,8 @@ Item {
                 border.width: 1
             }
 
-            onEditingFinished: {
-                //debugging
+            onEditingFinished: { inactiveTimer.restart()
+                holderNameInputRect.border.color = "#969696"
                 console.log("Input finished:", holderNameInput.text)
              }
         }
@@ -139,6 +141,7 @@ Item {
             anchors {
                 top: holderNameRect.bottom
                 left: ccNumRect.right
+                right: showNumButton.left
 
                 topMargin: 20
                 rightMargin: 20
@@ -175,9 +178,67 @@ Item {
                 previousLength = text.length;
             }
 
-            onEditingFinished: {
-                //debugging
+            onEditingFinished: { inactiveTimer.restart()
+                ccNumInputRect.border.color = "#969696"
                 console.log("Input finished:", ccNumInput.text)
+            }
+        }
+
+        Rectangle {
+            id: showNumButton
+
+            anchors {
+                top: holderNameRect.bottom
+                right: parent.right
+
+                topMargin: 20
+                leftMargin: 10
+                rightMargin: 20
+            }
+
+            color: "transparent"
+            border.color: rootWindow.accent1color
+            border.width: 1
+
+            width: 75
+            height: 40
+            radius: 15
+
+            Button {
+                id: showHideNum
+                anchors.centerIn: parent
+                anchors.fill: parent
+
+                text: "hide"
+                font.pixelSize: 25
+                flat: true
+
+                contentItem: Text {
+                    text: showHideNum.text
+                    font: showHideNum.font
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    color: rootWindow.textColor
+                }
+
+                background: Rectangle {
+                    implicitWidth: parent.width
+                    implicitHeight: parent.height
+                    color: "transparent"
+                }
+
+                HoverHandler { cursorShape: Qt.PointingHandCursor }
+
+                onClicked: { inactiveTimer.restart()
+                   if(showHideNum.text === "show") {
+                       showHideNum.text = "hide"
+                       ccNumInput.echoMode = "Normal"
+                   }
+                   else {
+                       showHideNum.text = "show"
+                       ccNumInput.echoMode = "Password"
+                   }
+                }
             }
         }
 
@@ -218,9 +279,9 @@ Item {
             anchors {
                 top: ccNumRect.bottom
                 left: expiryDateRect.right
+                right: ccNumInput.right
 
                 topMargin: 20
-                rightMargin: 20
             }
 
             echoMode: "Normal"
@@ -250,8 +311,8 @@ Item {
                 previousLength = text.length;
             }
 
-            onEditingFinished: {
-                //debugging
+            onEditingFinished: { inactiveTimer.restart()
+                expiryDateInputRect.border.color = "#969696"
                 console.log("Input finished:", expiryDateInput.text)
             }
         }
@@ -287,9 +348,9 @@ Item {
             anchors {
                 top: expiryDateRect.bottom
                 left: cvvRect.right
+                right: ccNumInput.right
 
                 topMargin: 20
-                rightMargin: 20
             }
 
             validator: RegularExpressionValidator {
@@ -312,9 +373,67 @@ Item {
                 border.width: 1
             }
 
-            onEditingFinished: {
-                //debugging
+            onEditingFinished: {inactiveTimer.restart()
+                cvvInputRect.border.color = "#969696"
                 console.log("Input finished:", expiryDateInput.text)
+            }
+        }
+
+        Rectangle {
+            id: showCCVButton
+
+            anchors {
+                top: expiryDateInput.bottom
+                right: parent.right
+
+                topMargin: 20
+                leftMargin: 10
+                rightMargin: 20
+            }
+
+            color: "transparent"
+            border.color: rootWindow.accent1color
+            border.width: 1
+
+            width: 75
+            height: 40
+            radius: 15
+
+            Button {
+                id: showHideCCV
+                anchors.centerIn: parent
+                anchors.fill: parent
+
+                text: "hide"
+                font.pixelSize: 25
+                flat: true
+
+                contentItem: Text {
+                    text: showHideCCV.text
+                    font: showHideCCV.font
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    color: rootWindow.textColor
+                }
+
+                background: Rectangle {
+                    implicitWidth: parent.width
+                    implicitHeight: parent.height
+                    color: "transparent"
+                }
+
+                HoverHandler { cursorShape: Qt.PointingHandCursor }
+
+                onClicked: { inactiveTimer.restart()
+                   if(showHideCCV.text === "show") {
+                       showHideCCV.text = "hide"
+                       cvvInput.echoMode = "Normal"
+                   }
+                   else {
+                       showHideCCV.text = "show"
+                       cvvInput.echoMode = "Password"
+                   }
+                }
             }
         }
 
@@ -354,9 +473,9 @@ Item {
             anchors {
                 top: cvvRect.bottom
                 left: zipCodeRect.right
+                right: ccNumInput.right
 
                 topMargin: 20
-                rightMargin: 20
             }
 
             echoMode: "Normal"
@@ -375,8 +494,8 @@ Item {
                 border.width: 1
             }
 
-            onEditingFinished: {
-                //debugging
+            onEditingFinished: { inactiveTimer.restart()
+                zipCodeInputRect.border.color = "#969696"
                 console.log("Input finished:", expiryDateInput.text)
             }
         }
@@ -546,103 +665,13 @@ Item {
                     rootWindow.creditCardWindow.visible = false;
                     rootWindow.backgroundRect.visible = false;
                     rootWindow.isFocused = true;
-
-                    holderNameInput.text = ""
-                    ccNumInput.text = ""
-                    expiryDateInput.text = ""
-                    cvvInput.text = ""
-                    zipCodeInput.text = ""
-                }
-            }
-        }
-
-
-        /*
-        Row {
-            id: buttonRow
-
-            anchors {
-                top: zipCodeRect.bottom
-                left: parent.left
-                topMargin: 20
-                leftMargin: 10
-            }
-
-            spacing: 10
-
-            Button {
-                id: saveButton
-                text: "Save"
-                font.pixelSize: 25
-                flat: true
-                width: 75
-                height: 40
-
-                background: Rectangle {
-                    radius: 15
-                    border.color: rootWindow.accent1color
-                    border.width: 1
-                    color: "transparent"
-                }
-
-                contentItem: Text {
-                    text: saveButton.text
-                    font: saveButton.font
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    color: rootWindow.textColor
-                    anchors.centerIn: parent
-                }
-
-                HoverHandler { cursorShape: Qt.PointingHandCursor }
-
-                onClicked: { inactiveTimer.restart()
-                    // validate inputs, then save
-                    DATABASE.saveCC(holderNameInput.text, ccNumInput.text, cvvInput.text, expiryDateInput.text, zipCodeInput.text)
-
-                    creditCard.parent.visible = false
-                    focusBackground.visible = false
-                    rootWindow.isFocused = true
                     missingFieldRect.visible = false
 
-                    holderNameInput.text = ""
-                    ccNumInput.text = ""
-                    expiryDateInput.text = ""
-                    cvvInput.text = ""
-                    zipCodeInput.text = ""
-                }
-            }
-
-            Button {
-                id: cancelButton
-                text: "Cancel"
-                font.pixelSize: 25
-                flat: true
-                width: 75
-                height: 40
-
-                background: Rectangle {
-                    radius: 15
-                    border.color: rootWindow.accent1color
-                    border.width: 1
-                    color: "transparent"
-                }
-
-                contentItem: Text {
-                    text: cancelButton.text
-                    font: cancelButton.font
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    color: rootWindow.textColor
-                    anchors.centerIn: parent
-                }
-
-                HoverHandler { cursorShape: Qt.PointingHandCursor }
-
-                onClicked: { inactiveTimer.restart()
-                    rootWindow.creditCardWindow.visible = false;
-                    rootWindow.backgroundRect.visible = false;
-                    rootWindow.isFocused = true;
+                    holderNameInputRect.border.color = "#969696"
+                    ccNumInputRect.border.color = "#969696"
+                    expiryDateInputRect.border.color = "#969696"
+                    cvvInputRect.border.color = "#969696"
+                    zipCodeInputRect.border.color = "#969696"
 
                     holderNameInput.text = ""
                     ccNumInput.text = ""
@@ -652,6 +681,5 @@ Item {
                 }
             }
         }
-        */
     }
 }

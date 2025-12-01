@@ -10,6 +10,9 @@ Item {
     property string heightText: ""
     property string addressText: ""
 
+    property int currentItem: -1
+    property bool editable: false
+
     id: idCard
 
     anchors.fill: parent
@@ -50,6 +53,7 @@ Item {
             topMargin: 20
             leftMargin: 30
             rightMargin: 30
+            bottomMargin: 30
         }
 
         Rectangle {
@@ -92,6 +96,7 @@ Item {
             color: rootWindow.textColor
             verticalAlignment: "AlignVCenter"
             leftPadding: 5
+            enabled: editable
 
             placeholderText: "John Doe"
             placeholderTextColor: "#B8B8B8"
@@ -99,7 +104,7 @@ Item {
             background: Rectangle {
                 id: holderNameInputRect
                 color: "transparent"
-                border.color: "#969696"
+                border.color: editable == true ? "#969696" : "transparent"
                 border.width: 1
             }
 
@@ -126,7 +131,7 @@ Item {
             height: 40
 
             Text {
-                id: birthdayText
+                id: birthdayTextID
                 anchors.fill: parent
 
                 text: "Birthday:  "
@@ -157,6 +162,7 @@ Item {
             color: rootWindow.textColor
             verticalAlignment: "AlignVCenter"
             leftPadding: 5
+            enabled: editable
 
             placeholderText: "mm/dd/yyyy"
             placeholderTextColor: "#B8B8B8"
@@ -164,7 +170,7 @@ Item {
             background: Rectangle {
                 id: birthdayInputRect
                 color: "transparent"
-                border.color: "#969696"
+                border.color: editable == true ? "#969696" : "transparent"
                 border.width: 1
             }
 
@@ -202,7 +208,7 @@ Item {
             height: 40
 
             Text {
-                id: genderText
+                id: genderTextID
                 anchors.fill: parent
 
                 text: "Gender:  "
@@ -236,6 +242,7 @@ Item {
             color: rootWindow.textColor
             verticalAlignment: "AlignVCenter"
             leftPadding: 5
+            enabled: editable
 
             placeholderText: "M/F"
             placeholderTextColor: "#B8B8B8"
@@ -243,7 +250,7 @@ Item {
             background: Rectangle {
                 id: genderInputRect
                 color: "transparent"
-                border.color: "#969696"
+                border.color: editable == true ? "#969696" : "transparent"
                 border.width: 1
             }
 
@@ -271,7 +278,7 @@ Item {
             height: 40
 
             Text {
-                id: heightText
+                id: heightTextID
                 anchors.fill: parent
 
                 text: "Height:  "
@@ -303,6 +310,7 @@ Item {
             color: rootWindow.textColor
             verticalAlignment: "AlignVCenter"
             leftPadding: 5
+            enabled: editable
 
             placeholderText: "6'0"
             placeholderTextColor: "#B8B8B8"
@@ -310,7 +318,7 @@ Item {
             background: Rectangle {
                 id: heightInputRect
                 color: "transparent"
-                border.color: "#969696"
+                border.color: editable == true ? "#969696" : "transparent"
                 border.width: 1
             }
 
@@ -346,7 +354,7 @@ Item {
             height: 40
 
             Text {
-                id: addressText
+                id: addressTextID
                 anchors.fill: parent
 
                 text: "Address:  "
@@ -375,6 +383,7 @@ Item {
             color: rootWindow.textColor
             verticalAlignment: "AlignVCenter"
             leftPadding: 5
+            enabled: editable
 
             placeholderText: "1234 Example Road, Dearborn MI, 48123"
             placeholderTextColor: "#B8B8B8"
@@ -383,7 +392,7 @@ Item {
                 id: addressInputRect
 
                 color: "transparent"
-                border.color: "#969696"
+                border.color: editable == true ? "#969696" : "transparent"
                 border.width: 1
             }
 
@@ -443,7 +452,7 @@ Item {
                 anchors.fill: parent
                 //enabled: isFocused
 
-                text: "Save"
+                text: editable === true ? "Update" : "Edit"
                 font.pixelSize: 25
                 font.bold: true
                 flat: true
@@ -496,18 +505,54 @@ Item {
 
                     if(incomplete == false)
                     {
-                        DATABASE.saveIDCard(holderNameInput.text, birthdayInput.text, genderInput.text, heightInput.text, addressInput.text)
+                        if(editable === false) {
+                            holderNameInputRect.border.color = "#969696"
+                            birthdayInputRect.border.color = "#969696"
+                            genderInputRect.border.color = "#969696"
+                            heightInputRect.border.color = "#969696"
+                            addressInputRect.border.color = "#969696"
+                            editable = true
+                        }
+                        else if(editable === true) {
+                            var changed = false
+                            if(holderNameInput.text !== nameText) {
+                                DATABASE.updateField(currentItem, "ID card", nameText, "name", holderNameInput.text)
+                                changed = true
+                            }
+                            if(birthdayInput.text !== birthdayText) {
+                                DATABASE.updateField(currentItem, "ID card", nameText, "birthday", birthdayInput.text)
+                                changed = true
+                            }
+                            if(genderInput.text !== genderText) {
+                                DATABASE.updateField(currentItem, "ID card", nameText, "gender", genderInput.text)
+                                changed = true
+                            }
+                            if(heightInput.text !== heightText) {
+                                DATABASE.updateField(currentItem, "ID card", nameText, "height", heightInput.text)
+                                changed = true
+                            }
+                            if(addressInput.text !== addressText) {
+                                DATABASE.updateField(currentItem, "ID card", nameText, "address", addressInput.text)
+                                changed = true
+                            }
+                            if(changed === true) {
+                                DATABASE.updateCC(currentItem, holderNameInput.text, ccNumInput.text, cvvInput.text, expiryDateInput.text, zipCodeInput.text)
+                            }
 
-                        idCard.parent.visible = false
-                        focusBackground.visible = false
-                        rootWindow.isFocused = true
-                        missingFieldRect.visible = false
+                            idCard.parent.visible = false
+                            focusBackground.visible = false
+                            rootWindow.isFocused = true
+                            missingFieldRect.visible = false
 
-                        holderNameInput.text = ""
-                        birthdayInput.text = ""
-                        genderInput.text = ""
-                        heightInput.text = ""
-                        addressInput.text = ""
+                            holderNameInputRect.border.color = "transparent"
+                            birthdayInputRect.border.color = "transparent"
+                            genderInputRect.border.color = "transparent"
+                            heightInputRect.border.color = "transparent"
+                            addressInputRect.border.color = "transparent"
+                            editable = false
+
+                            //weakPasswordWarning.visible = false
+                        }
                     }
                     else
                     {
@@ -523,7 +568,7 @@ Item {
             height: parent.height * .15
             width: parent.width * .2
             radius: 10
-            color: "#FF0000"
+            color: accent1color
 
             anchors {
                 right: saveButtonRect.left
@@ -538,7 +583,7 @@ Item {
                 anchors.fill: parent
                 //enabled: isFocused
 
-                text: "Cancel"
+                text: "Close"
                 font.pixelSize: 25
                 font.bold: true
                 flat: true
@@ -560,19 +605,100 @@ Item {
                     rootWindow.isFocused = true;
                     missingFieldRect.visible = false
 
-                    holderNameInputRect.border.color = "#969696"
-                    birthdayInputRect.border.color = "#969696"
-                    genderInputRect.border.color = "#969696"
-                    heightInputRect.border.color = "#969696"
-                    addressInputRect.border.color = "#969696"
+                    holderNameInputRect.border.color = "transparent"
+                    birthdayInputRect.border.color = "transparent"
+                    genderInputRect.border.color = "transparent"
+                    heightInputRect.border.color = "transparent"
+                    addressInputRect.border.color = "transparent"
 
                     holderNameInput.text = ""
                     birthdayInput.text = ""
                     genderInput.text = ""
                     heightInput.text = ""
                     addressInput.text = ""
+                    editable = false
                 }
             }
         }
+    }
+
+    Rectangle {
+        id: deleteButtonRect
+
+        height: parent.height * .15
+        width: parent.width * .2
+        radius: 10
+        color: "#FF0000"
+
+        anchors {
+            left: parent.left
+            bottom: idCardFrame.bottom
+
+            leftMargin: parent.width * 0.02
+            bottomMargin: parent.height * 0.02
+        }
+
+        Button {
+            id: deleteID
+            anchors.fill: parent
+            //enabled: isFocused
+
+            text: "Delete"
+            font.pixelSize: 25
+            font.bold: true
+            flat: true
+
+            contentItem: Text {
+                anchors.centerIn: parent
+                text: deleteID.text
+                font: deleteID.font
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                color: "#FFFFFF"
+            }
+
+            HoverHandler { cursorShape: Qt.PointingHandCursor }
+
+            onClicked: { inactiveTimer.restart()
+                holderNameInputRect.border.color = "transparent"
+                birthdayInputRect.border.color = "transparent"
+                genderInputRect.border.color = "transparent"
+                heightInputRect.border.color = "transparent"
+                addressInputRect.border.color = "transparent"
+
+                holderNameInput.text = ""
+                birthdayInput.text = ""
+                genderInput.text = ""
+                heightInput.text = ""
+                addressInput.text = ""
+
+                idCard.parent.visible = false
+                focusBackground.visible = false
+                rootWindow.isFocused = true
+                missingFieldRect.visible = false
+
+                savedModel.clear()
+                DATABASE.deleteItem(currentItem, "ID card", "name", nameText)
+
+                missingFieldRect.visible = false
+                editable = false
+            }
+        }
+    }
+
+    function populateUI(_idx, _name, _bday, _gender, _height, _address) {
+        currentItem = _idx
+
+        holderNameInput.text = _name
+        birthdayInput.text = _bday
+        genderInput.text = _gender
+        heightInput.text = _height
+        addressInput.text = _address
+
+        nameText = _name
+        birthdayText = _bday
+        genderText = _gender
+        heightText = _height
+        addressText = _address
     }
 }

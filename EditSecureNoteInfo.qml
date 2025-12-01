@@ -7,6 +7,8 @@ Item {
     property string noteName: ""
     property string noteText: ""
 
+    property int currentItem: -1
+    property bool editable: false
     id: note
 
     anchors.fill: parent
@@ -51,7 +53,7 @@ Item {
         }
 
         TextField {
-            id: secureNoteName
+            id: secureNoteNameInput
             anchors {
                 top: parent.top
                 left: parent.left
@@ -63,31 +65,31 @@ Item {
             color: rootWindow.textColor
             verticalAlignment: "AlignVCenter"
             leftPadding: 5
+            enabled: editable
 
             placeholderText: "Name of note"
             placeholderTextColor: "#B8B8B8"
 
             background: Rectangle {
-                id: secureNoteNameRect
+                id: secureNoteNameInputRect
                 color: "transparent"
-                border.color: "#969696"
+                border.color: editable == true ? "#969696" : "transparent"
                 border.width: 1
             }
 
             onEditingFinished: {
                 //debugging
-                console.log("Input finished:", secureNoteName.text)
-                secureNoteNameRect.border.color = "#969696"
-            }
+                console.log("Input finished:", secureNoteNameInput.text)
+             }
         }
 
         Rectangle {
             id: textEditRect
 
             anchors {
-                top: secureNoteName.bottom
-                left: secureNoteName.left
-                right: secureNoteName.right
+                top: secureNoteNameInput.bottom
+                left: secureNoteNameInput.left
+                right: secureNoteNameInput.right
                 bottom: cancelButtonRect.top
 
                 topMargin: 15
@@ -97,7 +99,7 @@ Item {
             }
 
             color: "transparent"
-            border.color: "#969696"
+            border.color: editable == true ? "#969696" : "transparent"
             border.width: 1
 
             Text {
@@ -115,7 +117,6 @@ Item {
                 }
 
                 visible: noteContent.text === "" ? true : false
-
             }
 
             TextEdit {
@@ -127,9 +128,7 @@ Item {
                 verticalAlignment: "AlignTop"
                 padding: 5
                 wrapMode: TextEdit.WordWrap
-
-                //placeholderText: "Enter note content"
-                //placeholderTextColor: "#B8B8B8"
+                enabled: editable
 
                 onEditingFinished: {
                     //debugging
@@ -155,7 +154,7 @@ Item {
             border.width: 1
             border.color: "#FF0000"
             radius: 5
-            color: "#30FF0000" // 80 is alpha value
+            color: "#30FF0000" // 30 is alpha value
 
             Text {
                 color: "#FF0000"
@@ -191,7 +190,7 @@ Item {
                 anchors.fill: parent
                 //enabled: isFocused
 
-                text: "Save"
+                text: editable === true ? "Update" : "Edit"
                 font.pixelSize: 25
                 font.bold: true
                 flat: true
@@ -211,14 +210,13 @@ Item {
                     color: "transparent"
                 }
 
-
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
 
                 onClicked: { inactiveTimer.restart()
                     // ADD SAVE FUNCTIONALITY HERE ONCE DATABASE IS IMPLEMENTED //
                     var incomplete = false
-                    if(secureNoteName.text == "") {
-                        secureNoteName.background.border.color = "#FF0000"
+                    if(secureNoteNameInput.text == "") {
+                        secureNoteNameInputRect.background.border.color = "#FF0000"
                         incomplete = true
                     }
                     if(noteContent.text == "") {
@@ -227,16 +225,32 @@ Item {
                     }
 
                     if(incomplete == false) {
-                        DATABASE.saveNote(secureNoteName.text, noteContent.text)
+                        if(editable === false) {
+                            textEditRect.border.color = "#969696"
+                            secureNoteNameInputRect.border.color = "#969696"
+                            editable = true
+                        }
+                        else if(editable === true) {
+                            var changed = false
+                            if(secureNoteNameInput.text !== noteName) {
+                                DATABASE.updateField(currentItem, "secure note", noteName, "title", secureNoteNameInput.text)
+                                changed = true
+                            }
+                            if(noteContent.text !== noteText) {
+                                DATABASE.updateField(currentItem, "secure note", noteName, "note", noteContent.text)
+                                changed = true
+                            }
+                            if(changed === true) {
+                                DATABASE.updateNote(currentItem, secureNoteNameInput.text, noteContent.text)
+                            }
 
-                        note.parent.visible = false
-                        focusBackground.visible = false
-                        rootWindow.isFocused = true
-                        noteContent.text = ""
-                        secureNoteName.text = ""
-                        secureNoteName.background.border.color = "#969696"
-                        textEditRect.border.color = "#969696"
-                        missingFieldRect.visible = false
+                            note.parent.visible = false
+                            focusBackground.visible = false
+                            rootWindow.isFocused = true
+                            secureNoteNameInputRect.border.color = "transparent"
+                            textEditRect.border.color = "transparent"
+                            missingFieldRect.visible = false
+                        }
                     }
                     else {
                       missingFieldRect.visible = true
@@ -251,7 +265,7 @@ Item {
             height: parent.height * .15
             width: parent.width * .2
             radius: 10
-            color: "#FF0000"
+            color: accent1color
 
             anchors {
                 right: saveButtonRect.left
@@ -284,15 +298,84 @@ Item {
 
                 onClicked: { inactiveTimer.restart()
                     noteContent.text = ""
-                    secureNoteName.text = ""
+                    secureNoteNameInput.text = ""
                     note.parent.visible = false
                     focusBackground.visible = false
                     rootWindow.isFocused = true
-                    secureNoteName.background.border.color = "#969696"
-                    textEditRect.border.color = "#969696"
+                    secureNoteNameInputRect.border.color = "transparent"
+                    textEditRect.border.color = "transparent"
+                    editable = false
                     missingFieldRect.visible = false
                 }
             }
         }
+
+        Rectangle {
+            id: deleteButtonRect
+
+            height: parent.height * .15
+            width: parent.width * .2
+            radius: 10
+            color: "#FF0000"
+
+            anchors {
+                left: parent.left
+                bottom: noteFrame.bottom
+
+                leftMargin: parent.width * 0.02
+                bottomMargin: parent.height * 0.02
+            }
+
+            Button {
+                id: deleteID
+                anchors.fill: parent
+                //enabled: isFocused
+
+                text: "Delete"
+                font.pixelSize: 25
+                font.bold: true
+                flat: true
+
+                contentItem: Text {
+                    anchors.centerIn: parent
+                    text: deleteID.text
+                    font: deleteID.font
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    color: "#FFFFFF"
+                }
+
+                HoverHandler { cursorShape: Qt.PointingHandCursor }
+
+                onClicked: { inactiveTimer.restart()
+                    secureNoteNameInputRect.border.color = "transparent"
+                    textEditRect.border.color = "transparent"
+
+                    secureNoteNameInput.text = ""
+                    noteContent.text = ""
+
+                    note.parent.visible = false
+                    focusBackground.visible = false
+                    rootWindow.isFocused = true
+                    missingFieldRect.visible = false
+
+                    savedModel.clear()
+                    DATABASE.deleteItem(currentItem, "secure note", "title", noteName)
+
+                    missingFieldRect.visible = false
+                    editable = false
+                }
+            }
+        }
+    }
+
+    function populateUI(_idx, _name, _text) {
+        currentItem = _idx
+
+        secureNoteNameInput.text = _name
+        noteContent.text = _text
+
+        noteName = _name
+        noteText = _text
     }
 }

@@ -45,6 +45,8 @@ qt_add_qml_module(appcis476_app
         SOURCES notificationObservers.cpp
         SOURCES copyhandler.h
         QML_FILES EditCreditCard.qml
+        QML_FILES EditIDCard.qml
+        QML_FILES EditSecureNoteInfo.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
