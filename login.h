@@ -64,6 +64,9 @@ public:
                 emit loginSignal(loginID, user);
                 return true;
             }
+            else {
+                return false;
+            }
         }
 
         // hardcoded fallback

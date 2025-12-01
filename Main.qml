@@ -28,6 +28,7 @@ Window {
         interval: 120000
         onTriggered: {
             LOGIN.logout()
+            savedModel.clear()
         }
     }
 
@@ -439,7 +440,10 @@ Window {
 
                     HoverHandler { cursorShape: Qt.PointingHandCursor }
 
-                    onClicked: { inactiveTimer.restart();LOGIN.logout()}
+                    onClicked: { inactiveTimer.restart()
+                        LOGIN.logout()
+                        savedModel.clear()
+                    }
                 }
             }
         }

@@ -283,12 +283,16 @@ Item {
                onClicked: {
                    var success = LOGIN.tryLogin(userName, passWord)
                    console.log(success)
-                   if(success === true) {
-                       inactiveTimer.restart()
-                       loginScreen.visible = false
-                       usernameInput.text = ""
-                       passwordInput.text = ""
-                   }
+                    if(success === true) {
+                        inactiveTimer.restart()
+                        loginScreen.visible = false
+                        incorrectLogin.visible = false
+                        usernameInput.text = ""
+                        passwordInput.text = ""
+                    }
+                    else {
+                        incorrectLogin.visible = true
+                    }
                }
            }
        }
@@ -355,6 +359,36 @@ Item {
            }
        }
 
+        Rectangle {
+           id: incorrectLogin
+
+           height: parent.height * 0.10
+           width: parent.width * 0.40
+
+           anchors {
+               top: registerAccRect.bottom
+               topMargin: 8
+               horizontalCenter: parent.horizontalCenter
+           }
+
+           border.width: 1
+           border.color: "#FF0000"
+           radius: 5
+           color: "#30FF0000" // 80 is alpha value
+
+           Text {
+               color: "#FF0000"
+               text: "Incorrect username or password!"
+               anchors.fill: parent
+               font.pixelSize: 16
+               horizontalAlignment: Text.AlignHCenter
+               verticalAlignment: Text.AlignVCenter
+           }
+
+           visible: false
+        }
+
+       /*
        Rectangle {
            id: quickLoginRect
            width: 500
@@ -404,6 +438,7 @@ Item {
                    passwordInput.text = ""
                }
            }
-       }
+        }
+        */
     }
 }

@@ -19,8 +19,6 @@ private:
     QString user_name;
 
     std::vector<ISecret*> vault;
-
-    Website* webPointer;
     // ADD OTHER TYPE POINTERS HERE
 
     WeakPasswordObserver _weakObserver;
@@ -62,7 +60,6 @@ public:
 
     Q_INVOKABLE bool isWeakPassword(QString pass) const;
     Q_INVOKABLE bool isExpired(QString exp) const;
-
 
     Q_INVOKABLE void loadWebsite(int index);
     Q_INVOKABLE void loadCC(int index);
