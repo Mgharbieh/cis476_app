@@ -56,11 +56,28 @@ void DatabaseHandler::loadSavedData()
         }
         else if(type == "ID card")
         {
+            QString name = query.value("name").toString();
+            QString bday = query.value("birthday").toString();
+            QString gender = query.value("gender").toString();
+            QString height = query.value("height").toString();
+            QString address = query.value("address").toString();
 
+            IDCard* id = new IDCard(name, bday, gender, height, address);
+            vault.push_back(id);
+            int idx = static_cast<int>(vault.size() - 1);
+
+            emit itemLoaded("ID card", name, idx);
         }
         else if(type == "secure note")
         {
+            QString title = query.value("title").toString();
+            QString content = query.value("note").toString();
 
+            SecureNote* note = new SecureNote(title, content);
+            vault.push_back(note);
+            int idx = static_cast<int>(vault.size() - 1);
+
+            emit itemLoaded("secure note", title, idx);
         }
     }
 }
@@ -202,7 +219,14 @@ void DatabaseHandler::saveIDCard(QString name, QString bday, QString gender, QSt
     query.bindValue(6, height);
     query.bindValue(7, address);
     query.exec();
+
+    IDCard* id = new IDCard(name, bday, gender, height, address);
+    vault.push_back(id);
+    int idx = static_cast<int>(vault.size() - 1);
+
+    emit itemLoaded("ID card", name, idx);
 }
+
 
 void DatabaseHandler::saveNote(QString name, QString text)
 {
@@ -215,6 +239,12 @@ void DatabaseHandler::saveNote(QString name, QString text)
     query.bindValue(3, name);
     query.bindValue(4, text);
     query.exec();
+
+    SecureNote* note = new SecureNote(name, text);
+    vault.push_back(note);
+    int idx = static_cast<int>(vault.size() - 1);
+
+    emit itemLoaded("secure note", name, idx);
 }
 
 void DatabaseHandler::updateField(int index, QString type, QString title, QString field, QString newData)
@@ -224,6 +254,30 @@ void DatabaseHandler::updateField(int index, QString type, QString title, QStrin
     {
         query.prepare("UPDATE vault_db SET " + field + " = ? "
                       "WHERE id = ? AND url = ?");
+        query.bindValue(0, newData);
+        query.bindValue(1, user_ID);
+        query.bindValue(2, title);
+    }
+    else if(type == "credit card")
+    {
+        query.prepare("UPDATE vault_db SET " + field + " = ? "
+                      "WHERE id = ? AND credit_num = ?");
+        query.bindValue(0, newData);
+        query.bindValue(1, user_ID);
+        query.bindValue(2, title);
+    }
+    else if(type == "ID card")
+    {
+        query.prepare("UPDATE vault_db SET " + field + " = ? "
+                      "WHERE id = ? AND name = ?");
+        query.bindValue(0, newData);
+        query.bindValue(1, user_ID);
+        query.bindValue(2, title);
+    }
+    else if(type == "secure note")
+    {
+        query.prepare("UPDATE vault_db SET " + field + " = ? "
+                      "WHERE id = ? AND title = ?");
         query.bindValue(0, newData);
         query.bindValue(1, user_ID);
         query.bindValue(2, title);
@@ -282,6 +336,39 @@ void DatabaseHandler::loadCC(int index)
     QString zipCode = cc->getZipCode();
 
     emit loadCCSignal(index, name, ccNum, ccv, expDate, zipCode);
+}
+
+void DatabaseHandler::loadID(int index)
+{
+    if (index < 0 || index >= static_cast<int>(vault.size()))
+        return;
+
+    IDCard* id = dynamic_cast<IDCard*>(vault[index]);
+    if (!id)
+        return;
+
+    QString name = id->getName();
+    QString bday = id->getBirthday();
+    QString gender = id->getGender();
+    QString height = id->getHeight();
+    QString address = id->getAddress();
+
+    emit loadIDSignal(index, name, bday, gender, height, address);
+}
+
+void DatabaseHandler::loadNote(int index)
+{
+    if (index < 0 || index >= static_cast<int>(vault.size()))
+        return;
+
+    SecureNote* note = dynamic_cast<SecureNote*>(vault[index]);
+    if (!note)
+        return;
+
+    QString title = note->getNoteName();
+    QString content = note->getNoteContent();
+
+    emit loadNoteSignal(index, title, content);
 }
 
 void DatabaseHandler::reportWeakPassword(ISecret* secret)
@@ -379,10 +466,16 @@ bool DatabaseHandler::isExpired(QString exp) const
 
 void DatabaseHandler::updateIDCard(int index, QString name, QString bday, QString gender, QString height, QString address)
 {
-
+    IDCard* temp = dynamic_cast<IDCard*>(vault[index]);
+    delete(temp);
+    temp = new IDCard(name, bday, gender, height, address);
+    vault[index] = temp;
 }
 
 void DatabaseHandler::updateNote(int index, QString name, QString text)
 {
-
+    SecureNote* temp = dynamic_cast<SecureNote*>(vault[index]);
+    delete(temp);
+    temp = new SecureNote(name, text);
+    vault[index] = temp;
 }

@@ -623,7 +623,7 @@ Item {
             height: parent.height * .15
             width: parent.width * .2
             radius: 10
-            color: "#FF0000"
+            color: accent1color
 
             anchors {
                 right: saveButtonRect.left
@@ -740,11 +740,11 @@ Item {
         currentItem = _idx
 
         // Fill the fields
-        editable = true
+        //editable = true
         editWebsiteInput.text = _url
         editWebsiteUserInput.text = _user
         editWebsitePassInput.text = _pass
-        editable = false
+        //editable = false
 
         // Remember the original values if needed later
         websiteName = _url

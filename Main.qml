@@ -60,6 +60,14 @@ Window {
         function onLoadCCSignal(idx, name, ccNum, ccv, exp, zip) {
             editCCObj.populateUI(idx, name, ccNum, ccv, exp, zip)
         }
+
+        function onLoadIDSignal(idx, name, bday, gender, height, address) {
+            editIDObj.populateUI(idx, name, bday, gender, height, address)
+        }
+
+        function onLoadNoteSignal(idx, title, text) {
+            editNoteObj.populateUI(idx, title, text)
+        }
     }
 
     Connections {
@@ -573,6 +581,48 @@ Window {
         }
     }
 
+    Rectangle {
+        id: editIDGUIFrame
+        visible: false
+        color: backgroundcolor
+        radius: 20
+        z: 4
+
+        anchors {
+            top: parent.top
+            left:parent.left
+            right: parent.right
+            bottom: parent.bottom
+            margins: 100
+        }
+
+        EditIDCard {
+            id: editIDObj
+            anchors.fill: parent
+        }
+    }
+
+    Rectangle {
+        id: editNoteGUIFrame
+        visible: false
+        color: backgroundcolor
+        radius: 20
+        z: 4
+
+        anchors {
+            top: parent.top
+            left:parent.left
+            right: parent.right
+            bottom: parent.bottom
+            margins: 100
+        }
+
+        EditSecureNoteInfo {
+            id: editNoteObj
+            anchors.fill: parent
+        }
+    }
+
     Switch {
         id: lightDarkMode
         onClicked: switchColorMode()
@@ -774,6 +824,21 @@ Window {
             isFocused = false
             backgroundRect.visible = true
             editCCGUIFrame.visible = true
+        }
+        else if (type === "ID card") {
+            console.log("Loading data at index", idx)
+            DATABASE.loadID(idx)
+
+            isFocused = false
+            backgroundRect.visible = true
+            editIDGUIFrame.visible = true
+        }
+        else if (type === "secure note") {
+            DATABASE.loadNote(idx)
+
+            isFocused = false
+            backgroundRect.visible = true
+            editNoteGUIFrame.visible = true
         }
     }
 }
