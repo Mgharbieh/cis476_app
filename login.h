@@ -26,8 +26,6 @@ signals:
 
 public:
 
-    std::vector<QString> questions;
-
     Login() {};
 
     Q_INVOKABLE bool tryLogin(QString user, QString pass)
@@ -122,7 +120,6 @@ public:
         // Delete previous account if any
 
         account = new Account(username, password, q1, a1, q2, a2, q3, a3);
-        questions = account->questions;
         return true;
     }
 

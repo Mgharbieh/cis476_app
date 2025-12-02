@@ -13,7 +13,6 @@ class Account : public QObject, public IObserver {
     Q_OBJECT
 
 public:
-
     SecurityQuestionHandler* handler;
     std::vector<QString> questions;
 
